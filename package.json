@@ -1,7 +1,25 @@
 {
+  "name": "gamified6-12",
+  "version": "1.0.0",
+  "description": "Gamified learning platform for rural Odisha with offline-first capabilities.",
+  "main": "index.js",
+  "author": "STEM Village",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "vercel-build": "next build"
+  },
   "dependencies": {
     "next": "^15.5.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.4.0"
   }
 }

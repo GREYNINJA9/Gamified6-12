@@ -1,0 +1,84 @@
+/* GamificationWidgets.module.css */
+.coinCounter {
+  color: #fbbf24;
+  font-weight: bold;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.coinIcon {
+  width: 32px;
+  height: 32px;
+  background: radial-gradient(circle, #fbbf24 60%, #f59e42 100%);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.badgeList {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.badge {
+  background: #fff;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem 1rem;
+  font-size: 0.95rem;
+  color: #3b82f6;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.badge.unlocked {
+  background: #f3f4f6;
+  color: #16a34a;
+}
+
+.streakBar {
+  background: #fde68a;
+  border-radius: 0.5rem;
+  height: 16px;
+  width: 100%;
+  margin-top: 0.5rem;
+  position: relative;
+}
+
+.streakFire {
+  position: absolute;
+  left: 0;
+  top: -8px;
+  width: 24px;
+  height: 24px;
+  background: url('/fire.png') no-repeat center/contain;
+}
+
+.coinAnimate {
+  animation: coinPop 0.7s cubic-bezier(0.5, 1.5, 0.5, 1) forwards;
+}
+
+@keyframes coinPop {
+  0% {
+    transform: scale(1);
+  }
+  60% {
+    transform: scale(1.4);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 600px) {
+  .coinCounter {
+    font-size: 1rem;
+  }
+  .badge {
+    font-size: 0.85rem;
+  }
+}

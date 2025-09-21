@@ -1,0 +1,95 @@
+/* GameModal.module.css */
+.gameModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.gameContainer {
+  background: white;
+  border-radius: 1rem;
+  padding: 1rem;
+  max-width: 90vw;
+  max-height: 90vh;
+  position: relative;
+}
+
+.gameCanvas {
+  border-radius: 0.5rem;
+  max-width: 100%;
+  max-height: 70vh;
+}
+
+.gameControls {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  justify-content: center;
+}
+
+.controlButton {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.controlButton:hover {
+  background: #2563eb;
+}
+
+.controlButton.danger {
+  background: #ef4444;
+}
+
+.controlButton.danger:hover {
+  background: #dc2626;
+}
+
+.closeButton {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: #6b7280;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.closeButton:hover {
+  background: #4b5563;
+}
+
+@media (max-width: 600px) {
+  .gameContainer {
+    padding: 0.5rem;
+    max-width: 95vw;
+    max-height: 95vh;
+  }
+  
+  .gameControls {
+    flex-direction: column;
+  }
+  
+  .controlButton {
+    width: 100%;
+  }
+}
