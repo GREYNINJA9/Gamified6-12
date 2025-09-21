@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import Header from '../../components/Header';
+import Link from 'next/link';
 
 const VoiceNavigationSystem = dynamic(() => import('../../js/voice-navigation-system.js'), { ssr: false });
 
@@ -30,7 +31,7 @@ export default function TeacherLogin() {
         <a href="https://gov.odisha.gov.in/" target="_blank" rel="noopener" className="block mt-2 text-green-700 hover:underline">Government Portal</a>
       </form>
       <div className="mt-4 text-center">
-        <a href="/login" className="text-green-600 hover:underline">Student Login</a>
+        <Link href="/login" className="text-green-600 hover:underline">Student Login</Link>
       </div>
     </div>
   );

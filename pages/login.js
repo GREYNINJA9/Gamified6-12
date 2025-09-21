@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import Header from '../components/Header';
+import Link from 'next/link';
 
 const VoiceNavigationSystem = dynamic(() => import('../js/voice-navigation-system.js'), { ssr: false });
 const GuestAccessManager = dynamic(() => import('../js/guest-access-manager.js'), { ssr: false });
@@ -32,7 +33,7 @@ export default function Login() {
         <button type="button" className="w-full bg-gray-300 text-blue-900 p-2 rounded font-bold mt-2">Guest Access</button>
       </form>
       <div className="mt-4 text-center">
-        <a href="/teacher/login" className="text-blue-600 hover:underline">Teacher Login</a>
+        <Link href="/teacher/login" className="text-blue-600 hover:underline">Teacher Login</Link>
       </div>
     </div>
   );

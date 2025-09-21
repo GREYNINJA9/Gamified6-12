@@ -93,7 +93,7 @@ const Offline = (() => {
 
   function registerSW() {
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/learning/gamified6-12/sw.js').then(reg => {
+      navigator.serviceWorker.register('/sw.js').then(reg => {
         reg.onupdatefound = () => {
           const installing = reg.installing;
           installing.onstatechange = () => {

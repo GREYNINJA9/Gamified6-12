@@ -1,24 +1,40 @@
 import Footer from '../components/Footer';
-import { useEffect } from 'react';
 import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
 
 export default function Home() {
+  const bgRef = useRef(null);
+  const [vanta, setVanta] = useState(null);
+
   useEffect(() => {
-    import('feather-icons').then(f => f.replace());
-    import('aos').then(aos => aos.init());
-    import('vanta/dist/vanta.net.min.js').then(VANTA => {
-      if (window.VANTA) {
-        window.VANTA.NET({
-          el: '#hero-bg',
+    let cancelled = false;
+    (async () => {
+      const [{ default: NET }, { default: THREE }] = await Promise.all([
+        import('vanta/dist/vanta.net.min.js'),
+        import('three'),
+      ]);
+      if (!cancelled && bgRef.current && !vanta) {
+        const instance = NET({
+          el: bgRef.current,
+          THREE,
           color: 0x2563eb,
           backgroundColor: 0xffffff,
+          mouseControls: true,
+          touchControls: true,
         });
+        setVanta(instance);
       }
-    });
-  }, []);
+    })();
+    return () => {
+      cancelled = true;
+      if (vanta && typeof vanta.destroy === 'function') vanta.destroy();
+      setVanta(null);
+    };
+  }, [vanta]);
+
   return (
     <div>
-      <section id="hero-bg" className="h-96 flex flex-col justify-center items-center text-center bg-blue-600 text-white">
+      <section ref={bgRef} id="hero-bg" className="h-96 flex flex-col justify-center items-center text-center bg-blue-600 text-white">
         <h1 className="text-4xl font-bold mb-4">Gamified Learning for Rural Odisha</h1>
         <p className="mb-6">Offline-first, interactive, and accessible STEM education for grades 6-12</p>
         <Link href="/login" className="bg-yellow-400 text-blue-900 px-6 py-2 rounded font-bold">Get Started</Link>
