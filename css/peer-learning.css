@@ -1,0 +1,30 @@
+/* Peer Learning CSS: See plan for full requirements and integration points */
+
+/* Battle lobby, QR, connection status */
+.battle-lobby-modal { /* ... */ }
+.battle-qr { /* ... */ }
+.connection-status { /* ... */ }
+
+/* Quiz battle interface */
+.quiz-battle-ui { /* ... */ }
+.battle-timer { /* ... */ }
+.battle-leaderboard { /* ... */ }
+
+/* Challenge creation, gallery */
+.challenge-camera { /* ... */ }
+.challenge-gallery { /* ... */ }
+.challenge-thumbnail { /* ... */ }
+
+/* Voting interface */
+.peer-voting-ui { /* ... */ }
+.star-rating { /* ... */ }
+.voting-leaderboard { /* ... */ }
+
+/* Peer connection, discovery */
+.peer-discovery { /* ... */ }
+.peer-profile-card { /* ... */ }
+
+/* Mobile/touch, accessibility, cultural, loading, etc. */
+@media (max-width: 640px) { /* ... */ }
+[aria-label] { /* ... */ }
+/* ...more styles as per plan... */

@@ -1,0 +1,62 @@
+/* Concept Visualizer CSS */
+
+.concept-modal {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.8);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.concept-modal-content {
+  background: #fff;
+  border-radius: 1rem;
+  max-width: 700px;
+  width: 95vw;
+  padding: 2rem;
+  box-shadow: 0 4px 32px #0004;
+  position: relative;
+}
+.concept-controls {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+.concept-btn {
+  background: #2563eb;
+  color: #fff;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.concept-btn:hover {
+  background: #1e40af;
+}
+.concept-progress {
+  background: #e0e7ff;
+  border-radius: 1rem;
+  height: 1.25rem;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+}
+.concept-progress-fill {
+  background: linear-gradient(90deg, #2563eb, #38bdf8);
+  height: 100%;
+  transition: width 0.3s;
+}
+@media (max-width: 600px) {
+  .concept-modal-content {
+    padding: 1rem;
+    max-width: 98vw;
+  }
+  .concept-controls {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+/* ...other styles for accessibility, error, loading, etc. */

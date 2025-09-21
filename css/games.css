@@ -1,0 +1,15 @@
+/* STEM Village Games CSS */
+.game-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+.game-card { background: #fff; border-radius: 1rem; box-shadow: 0 2px 8px #0001; padding: 1.5rem; display: flex; flex-direction: column; align-items: center; transition: box-shadow 0.2s; }
+.game-card:hover { box-shadow: 0 4px 16px #0002; }
+.game-icon { width: 64px; height: 64px; margin-bottom: 1rem; }
+.game-title { font-size: 1.25rem; font-weight: bold; margin-bottom: 0.5rem; }
+.game-desc { font-size: 1rem; color: #555; margin-bottom: 0.75rem; text-align: center; }
+.game-meta { font-size: 0.9rem; color: #888; margin-bottom: 1rem; }
+.game-play-btn { background: #3b82f6; color: #fff; border: none; border-radius: 0.5rem; padding: 0.5rem 1.25rem; font-size: 1rem; cursor: pointer; transition: background 0.2s; }
+.game-play-btn:hover { background: #2563eb; }
+.game-progress { margin-top: 0.5rem; font-size: 0.9rem; color: #16a34a; }
+.lite .game-card { box-shadow: none; background: #f3f4f6; }
+.lite .game-icon { filter: grayscale(1); }
+.lite .game-play-btn { background: #94a3b8; color: #333; }
+@media (max-width: 600px) { .game-grid { grid-template-columns: 1fr; } .game-card { padding: 1rem; } .game-title { font-size: 1rem; } }

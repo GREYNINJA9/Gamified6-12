@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="games.title">Learning Games - STEM Village</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <link rel="manifest" href="/learning/gamified6-12/manifest.json">
+    <meta name="theme-color" content="#3b82f6">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/games.css">
+</head>
+<body class="bg-gray-50" data-page="games" data-lite-support>
+    <!-- Header -->
+    <header class="bg-blue-700 text-white shadow-md">
+        <div class="container mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <a href="/learning/gamified6-12/index.html" class="flex items-center">
+                    <img src="/static/logo-white.png" alt="STEM Village" class="h-10">
+                </a>
+                <span id="offline-status" class="ml-2 text-xs"></span>
+            </div>
+            <nav class="hidden md:flex space-x-8">
+                <a href="/learning/gamified6-12/dashboard.html" class="text-blue-200 hover:text-white transition duration-300" data-i18n="nav.dashboard">Dashboard</a>
+                <a href="/learning/gamified6-12/my-courses.html" class="text-blue-200 hover:text-white transition duration-300" data-i18n="nav.courses">Courses</a>
+                <a href="/learning/gamified6-12/games.html" class="text-white font-medium" data-i18n="nav.games">Games</a>
+                <a href="/learning/gamified6-12/progress.html" class="text-blue-200 hover:text-white transition duration-300" data-i18n="nav.progress">Progress</a>
+                <a href="/learning/gamified6-12/leaderboard.html" class="text-blue-200 hover:text-white transition duration-300" data-i18n="nav.leaderboard">Leaderboard</a>
+            </nav>
+            <div class="flex items-center gap-4">
+                <div id="lang-toggle"></div>
+                <button id="lite-toggle" class="px-2 py-1 rounded bg-gray-200 text-xs text-blue-700" title="Lite Mode">Lite Mode</button>
+                <a href="/learning/gamified6-12/profile.html" class="flex items-center">
+                    <img class="w-8 h-8 rounded-full" src="/static/avatar-placeholder.png" alt="Profile" onerror="this.src='/static/avatar-placeholder.png'">
+                </a>
+            </div>
+        </div>
+        <!-- Gamification Widgets -->
+        <div class="gamification-bar flex flex-wrap gap-4 mb-6 items-center">
+            <div id="coin-counter" class="gamification-widget" title="Coins">
+                <img src="/learning/gamified6-12/img/coin.svg" alt="Coins" style="width:32px;vertical-align:middle;">
+                <span id="coin-count" class="font-bold text-lg">0</span>
+            </div>
+            <div id="streak-widget" class="gamification-widget" title="Streak">
+                <img src="/learning/gamified6-12/img/streak.svg" alt="Streak" style="width:32px;vertical-align:middle;">
+                <span id="streak-count" class="font-bold text-lg">0</span>
+            </div>
+            <div id="badge-widget" class="gamification-widget" title="Badges">
+                <img src="/learning/gamified6-12/img/badge.svg" alt="Badges" style="width:32px;vertical-align:middle;">
+                <span id="badge-count" class="font-bold text-lg">0</span>
+            </div>
+            <div id="village-mini" class="gamification-widget" title="Village Progress">
+                <img src="/learning/gamified6-12/img/village.svg" alt="Village" style="width:32px;vertical-align:middle;">
+                <span id="village-level" class="font-bold text-lg">1</span>
+            </div>
+            <div id="daily-challenge-card" class="gamification-widget" title="Daily Challenge">
+                <span id="daily-challenge-title" class="font-bold">Daily Challenge</span>
+                <span id="daily-challenge-status" class="ml-2">-</span>
+            </div>
+        </div>
+            <!-- Leaderboard & Achievements -->
+            <div class="flex flex-wrap gap-6 mb-8">
+                <div id="leaderboard-widget" class="gamification-panel" style="flex:1;min-width:260px;">
+                    <h2 class="font-bold text-xl mb-2" data-i18n="gamification.leaderboard">Leaderboard</h2>
+                    <ul id="leaderboard-list" class="list-disc pl-4"></ul>
+                </div>
+                <div id="achievement-widget" class="gamification-panel" style="flex:1;min-width:260px;">
+                    <h2 class="font-bold text-xl mb-2" data-i18n="gamification.achievements">Achievements</h2>
+                    <ul id="achievement-list" class="list-disc pl-4"></ul>
+                </div>
+            </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <div class="flex items-center justify-between mb-8">
+            <h1 class="text-3xl font-bold text-gray-900" data-i18n="games.title">Learning Games</h1>
+            <div class="relative w-64">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i data-feather="search" class="h-5 w-5 text-gray-400"></i>
+                </div>
+                <input id="game-search" type="text" data-i18n="games.search" data-i18n-attr="placeholder" placeholder="Search games..." class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            </div>
+        </div>
+
+        <!-- Game Categories -->
+        <div class="mb-8">
+            <h2 class="text-xl font-semibold mb-4" data-i18n="games.title">Categories</h2>
+            <div class="flex flex-wrap gap-3" id="game-categories">
+                <button class="px-4 py-2 bg-blue-600 text-white rounded-full text-sm font-medium" data-category="all" data-i18n="games.cat.all">All Games</button>
+                <button class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full text-sm font-medium" data-category="math" data-i18n="games.cat.math">Mathematics</button>
+                <button class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full text-sm font-medium" data-category="physics" data-i18n="games.cat.sci">Physics</button>
+                <button class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full text-sm font-medium" data-category="chemistry" data-i18n="games.cat.sci">Chemistry</button>
+            </div>
+        </div>
+
+        <!-- Featured Games Grid -->
+        <div class="game-grid" id="featured-games">
+            <!-- Physics -->
+            <div class="game-card" data-category="physics">
+                <div class="game-icon" style="background:linear-gradient(135deg,#3b82f6,#60a5fa);border-radius:50%;"><i data-feather="activity" class="w-12 h-12"></i></div>
+                <div class="game-title" data-i18n="game.gravityMaster.title">Gravity Master</div>
+                <div class="game-desc" data-i18n="game.gravityMaster.desc">Guide the ball using gravity wells and barriers.</div>
+                <div class="game-meta" data-i18n="game.difficulty.beginner">Beginner</div>
+                <button class="game-play-btn" data-game="gravityMaster" data-i18n="game.play">Play</button>
+            </div>
+            <div class="game-card" data-category="physics">
+                <div class="game-icon" style="background:linear-gradient(135deg,#3b82f6,#60a5fa);border-radius:50%;"><i data-feather="zap" class="w-12 h-12"></i></div>
+                <div class="game-title" data-i18n="game.collisionCourse.title">Collision Course</div>
+                <div class="game-desc" data-i18n="game.collisionCourse.desc">Create chain reactions using collisions and momentum.</div>
+                <div class="game-meta" data-i18n="game.difficulty.intermediate">Intermediate</div>
+                <button class="game-play-btn" data-game="collisionCourse" data-i18n="game.play">Play</button>
+            </div>
+            <!-- Math -->
+            <div class="game-card" data-category="math">
+                <div class="game-icon" style="background:linear-gradient(135deg,#16a34a,#4ade80);border-radius:50%;"><i data-feather="grid" class="w-12 h-12"></i></div>
+                <div class="game-title" data-i18n="game.numberMaze.title">Number Maze</div>
+                <div class="game-desc" data-i18n="game.numberMaze.desc">Solve math problems to escape the maze.</div>
+                <div class="game-meta" data-i18n="game.difficulty.beginner">Beginner</div>
+                <button class="game-play-btn" data-game="numberMaze" data-i18n="game.play">Play</button>
+            </div>
+            <div class="game-card" data-category="math">
+                <div class="game-icon" style="background:linear-gradient(135deg,#16a34a,#4ade80);border-radius:50%;"><i data-feather="bar-chart-2" class="w-12 h-12"></i></div>
+                <div class="game-title" data-i18n="game.algebraAdventure.title">Algebra Adventure</div>
+                <div class="game-desc" data-i18n="game.algebraAdventure.desc">Solve algebraic equations to progress.</div>
+                <div class="game-meta" data-i18n="game.difficulty.intermediate">Intermediate</div>
+                <button class="game-play-btn" data-game="algebraAdventure" data-i18n="game.play">Play</button>
+            </div>
+            <!-- Chemistry -->
+            <div class="game-card" data-category="chemistry">
+                <div class="game-icon" style="background:linear-gradient(135deg,#a21caf,#c084fc);border-radius:50%;"><i data-feather="hexagon" class="w-12 h-12"></i></div>
+                <div class="game-title" data-i18n="game.moleculeBuilder.title">Molecule Builder</div>
+                <div class="game-desc" data-i18n="game.moleculeBuilder.desc">Build molecules by dragging atoms together.</div>
+                <div class="game-meta" data-i18n="game.difficulty.beginner">Beginner</div>
+                <button class="game-play-btn" data-game="moleculeBuilder" data-i18n="game.play">Play</button>
+            </div>
+            <div class="game-card" data-category="chemistry">
+                <div class="game-icon" style="background:linear-gradient(135deg,#a21caf,#c084fc);border-radius:50%;"><i data-feather="flask" class="w-12 h-12"></i></div>
+                <div class="game-title" data-i18n="game.reactionLab.title">Reaction Lab</div>
+                <div class="game-desc" data-i18n="game.reactionLab.desc">Balance chemical equations and simulate reactions.</div>
+                <div class="game-meta" data-i18n="game.difficulty.advanced">Advanced</div>
+                <button class="game-play-btn" data-game="reactionLab" data-i18n="game.play">Play</button>
+            </div>
+        </div>
+
+        <!-- Game Modal -->
+        <div id="game-modal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.7);z-index:50;align-items:center;justify-content:center;">
+            <div style="background:#fff;border-radius:1rem;max-width:600px;width:90vw;padding:2rem;position:relative;box-shadow:0 4px 32px #0004;">
+                <button id="close-game" style="position:absolute;top:1rem;right:1rem;" class="game-play-btn">✕</button>
+                <canvas id="game-canvas" style="width:100%;height:320px;max-width:100%;border-radius:1rem;background:#f3f4f6;"></canvas>
+                <div class="flex gap-2 mt-4">
+                    <button id="pause-game" class="game-play-btn" data-i18n="game.pause">Pause</button>
+                </div>
+            </div>
+        </div>
+        <!-- Scripts -->
+        <script src="/learning/gamified6-12/js/i18n.js"></script>
+        <script src="/learning/gamified6-12/js/offline.js"></script>
+        <script src="/learning/gamified6-12/js/game-engine.js"></script>
+        <script src="/learning/gamified6-12/js/game-progression.js"></script>
+        <script src="/learning/gamified6-12/js/low-poly-renderer.js"></script>
+    <script src="/learning/gamified6-12/js/gamification-manager.js"></script>
+    <script src="/learning/gamified6-12/js/village-game.js"></script>
+    <script src="/learning/gamified6-12/js/leaderboard-system.js"></script>
+    <script src="/learning/gamified6-12/js/daily-challenge-system.js"></script>
+    <script src="/learning/gamified6-12/js/games/physics-puzzles.js"></script>
+    <script src="/learning/gamified6-12/js/games/math-escape-rooms.js"></script>
+    <script src="/learning/gamified6-12/js/games/chemistry-simulations.js"></script>
+    <link rel="stylesheet" href="/learning/gamified6-12/css/gamification.css">
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            i18n.init();
+            if (window.Offline) Offline.init();
+            feather.replace();
+            // Gamification init
+            GamificationManager.init();
+            VillageGame.initMini('village-mini');
+            LeaderboardSystem.init('leaderboard-list');
+            DailyChallengeSystem.init('daily-challenge-card');
+            GamificationManager.updateCoinCounter('coin-count');
+            GamificationManager.updateStreakWidget('streak-count');
+            GamificationManager.updateBadgeWidget('badge-count');
+            GamificationManager.updateVillageLevel('village-level');
+            GamificationManager.updateAchievements('achievement-list');
+            // Lite Mode toggle
+            document.getElementById('lite-toggle').onclick = function() {
+                Offline.toggleLiteMode();
+            };
+            // Category filter
+            document.getElementById('game-categories').addEventListener('click', function(e) {
+                if (e.target.matches('button[data-category]')) {
+                    let cat = e.target.getAttribute('data-category');
+                    document.querySelectorAll('.game-card').forEach(card => {
+                        card.style.display = (cat === 'all' || card.getAttribute('data-category') === cat) ? '' : 'none';
+                    });
+                }
+            });
+            // Search filter
+            document.getElementById('game-search').addEventListener('input', function(e) {
+                let val = e.target.value.toLowerCase();
+                document.querySelectorAll('.game-card').forEach(card => {
+                    let title = card.querySelector('.game-title').textContent.toLowerCase();
+                    let desc = card.querySelector('.game-desc').textContent.toLowerCase();
+                    card.style.display = (title.includes(val) || desc.includes(val)) ? '' : 'none';
+                });
+            });
+            // Game launcher
+            document.querySelectorAll('.game-play-btn[data-game]').forEach(btn => {
+                btn.onclick = function() {
+                    let game = btn.getAttribute('data-game');
+                    document.getElementById('game-modal').style.display = 'flex';
+                    // Launch correct game stub
+                    let canvasId = 'game-canvas';
+                    let reward = 0;
+                    if (game === 'gravityMaster') { PhysicsPuzzles.GravityMaster.play(canvasId); reward = 10; }
+                    if (game === 'collisionCourse') { PhysicsPuzzles.CollisionCourse.play(canvasId); reward = 15; }
+                    if (game === 'numberMaze') { MathEscapeRooms.NumberMaze.play(canvasId); reward = 8; }
+                    if (game === 'algebraAdventure') { MathEscapeRooms.AlgebraAdventure.play(canvasId); reward = 12; }
+                    if (game === 'moleculeBuilder') { ChemistrySimulations.MoleculeBuilder.play(canvasId); reward = 10; }
+                    if (game === 'reactionLab') { ChemistrySimulations.ReactionLab.play(canvasId); reward = 20; }
+                    // Gamification: award coins, update streak, check badges, update leaderboard
+                    GamificationManager.awardCoins(reward);
+                    GamificationManager.updateStreak();
+                    GamificationManager.checkBadges(game);
+                    LeaderboardSystem.updateLeaderboard();
+                    GamificationManager.updateAchievements('achievement-list');
+                };
+            });
+            // Modal close
+            document.getElementById('close-game').onclick = function() {
+                document.getElementById('game-modal').style.display = 'none';
+            };
+            // Pause button stub
+            document.getElementById('pause-game').onclick = function() {
+                alert('Game paused (stub)');
+            };
+        });
+        // Service Worker registration
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/learning/gamified6-12/sw.js');
+          });
+        }
+        </script>
+</body>
+</html>

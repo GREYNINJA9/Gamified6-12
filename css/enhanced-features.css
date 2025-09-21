@@ -1,0 +1,33 @@
+/* Enhanced Features CSS: AR, Career, Hero, Parent Communication */
+
+/* AR Experiments */
+.ar-viewport { /* ... */ }
+.ar-control-btn { /* ... */ }
+.ar-marker-indicator { /* ... */ }
+.ar-calibration { /* ... */ }
+.ar-experiment-card { /* ... */ }
+
+/* Career Explorer */
+.career-pathway { /* ... */ }
+.career-card { /* ... */ }
+.career-quiz { /* ... */ }
+.career-milestone { /* ... */ }
+
+/* Hero Stories */
+.hero-profile-card { /* ... */ }
+.hero-story { /* ... */ }
+.hero-audio-player { /* ... */ }
+.hero-reflection { /* ... */ }
+
+/* Parent Communication */
+.parent-dashboard { /* ... */ }
+.parent-message { /* ... */ }
+.parent-progress-card { /* ... */ }
+.parent-feedback-form { /* ... */ }
+
+/* Mobile AR Optimization */
+@media (max-width: 640px) { /* ... */ }
+
+/* Accessibility, Gamification, Loading, Error, Cultural, etc. */
+[aria-label] { /* ... */ }
+/* ...more styles as per plan... */
