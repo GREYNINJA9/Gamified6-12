@@ -1,58 +1,78 @@
 // Gamification Manager
 class GamificationManager {
   constructor() {
-    this.coins = 0;
-    this.badges = [];
-    this.streaks = { daily: 0, activity: 0, perfect: 0 };
-    this.load();
+    this.state = {
+      coins: 0,
+      badges: [],
+      streaks: { daily: 0, weekly: 0 },
+    };
+    this._loadState();
   }
-  load() {
-    if (window.Offline) {
-      Offline.get('coins', 'balance', val => { this.coins = val || 0; });
-      Offline.get('badges', 'all', val => { this.badges = val || []; });
-      Offline.get('streaks', 'all', val => { this.streaks = val || { daily: 0, activity: 0, perfect: 0 }; });
+
+  _log(...args) {
+    if (false) console.log('[GamificationManager]', ...args); // Set to true for debugging
+  }
+
+  _loadState() {
+    try {
+      const data = localStorage.getItem('gm_state');
+      if (data) {
+        this.state = JSON.parse(data);
+        this._log('Loaded state:', this.state);
+      }
+    } catch (err) {
+      this._log('Load error:', err);
     }
   }
-  save() {
-    if (window.Offline) {
-      Offline.store('coins', 'balance', this.coins);
-      Offline.store('badges', 'all', this.badges);
-      Offline.store('streaks', 'all', this.streaks);
+
+  _saveState() {
+    try {
+      localStorage.setItem('gm_state', JSON.stringify(this.state));
+      this._log('Saved state:', this.state);
+    } catch (err) {
+      this._log('Save error:', err);
     }
   }
-  earnCoins(amount, reason) {
-    this.coins += amount;
-    this.save();
-    // Animation/notification stub
-    if (window.showCoinAnimation) showCoinAnimation(amount, reason);
-  }
-  spendCoins(amount) {
-    if (this.coins >= amount) {
-      this.coins -= amount;
-      this.save();
-      return true;
-    }
-    return false;
-  }
-  unlockBadge(badge) {
-    if (!this.badges.includes(badge)) {
-      this.badges.push(badge);
-      this.save();
-      if (window.showBadgeUnlock) showBadgeUnlock(badge);
-    }
-  }
-  updateStreak(type, value) {
-    this.streaks[type] = value;
-    this.save();
-  }
-  getBadgeList() {
-    return this.badges;
-  }
+
   getCoinBalance() {
-    return this.coins;
+    return this.state.coins || 0;
   }
-  getStreak(type) {
-    return this.streaks[type] || 0;
+
+  getCoins() {
+    // Alias for getCoinBalance
+    return this.getCoinBalance();
+  }
+
+  getBadgeList() {
+    return Array.isArray(this.state.badges) ? this.state.badges : [];
+  }
+
+  getBadges() {
+    // Alias for badge count
+    return this.getBadgeList().length;
+  }
+
+  getStreak(type = 'daily') {
+    return this.state.streaks && this.state.streaks[type] ? this.state.streaks[type] : 0;
+  }
+
+  addCoins(amount) {
+    this.state.coins = (this.state.coins || 0) + amount;
+    this._saveState();
+  }
+
+  addBadge(badge) {
+    if (!this.state.badges.includes(badge)) {
+      this.state.badges.push(badge);
+      this._saveState();
+    }
+  }
+
+  incrementStreak(type = 'daily') {
+    if (!this.state.streaks) this.state.streaks = {};
+    this.state.streaks[type] = (this.state.streaks[type] || 0) + 1;
+    this._saveState();
   }
 }
-window.GamificationManager = GamificationManager;
+
+export default GamificationManager;

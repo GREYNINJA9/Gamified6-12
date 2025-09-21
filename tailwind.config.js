@@ -5,12 +5,11 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx}',
     './hooks/**/*.{js,ts,jsx,tsx}',
     './utils/**/*.{js,ts,jsx,tsx}',
-    './styles/**/*.{css}',
   ],
   safelist: [
-    /^bg-(red|green|blue)-(100|500|700)$/,
-    /^text-(red|green|blue)-(500|700)$/,
-    /^border-(red|green|blue)-(500|700)$/,
+    { pattern: /^bg-(red|green|blue)-(100|500|700)$/ },
+    { pattern: /^text-(red|green|blue)-(500|700)$/ },
+    { pattern: /^border-(red|green|blue)-(500|700)$/ },
   ],
   theme: {
     extend: {

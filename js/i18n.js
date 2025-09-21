@@ -177,9 +177,19 @@ const i18n = (() => {
   'notification.streakBonus': 'Streak Bonus!',
   'notification.villageUpgrade': 'Village Upgraded!',
   'notification.challengeComplete': 'Challenge Complete!',
-  'notification.friendChallenge': 'Friend Challenge!',
-  'notification.error': 'Error',
-  'notification.help': 'Help',
+      'notification.friendChallenge': 'Friend Challenge!',
+      'notification.error': 'Error',
+      'notification.help': 'Help',
+      // Voice Navigation
+      'voice.start': 'Start Voice Navigation',
+      'voice.help': 'Voice Help',
+      'voice.status.idle': 'Idle',
+      'voice.status.listening': 'Listening',
+      'voice.status.processing': 'Processing',
+      // Guest Access
+      'guest.continue': 'Continue as Guest',
+      'guest.benefits': 'No account needed, start learning immediately. Progress is saved locally.',
+      'guest.mode': 'Guest Mode',
       'page.index.title': 'STEM Village',
       'page.index.desc': 'Gamified learning for rural Odisha',
       'nav.dashboard': 'Dashboard',
@@ -420,6 +430,16 @@ const i18n = (() => {
       'games.cat.tech': 'प्रौद्योगिकी',
       'games.cat.eng': 'इंजीनियरिंग',
       'games.cat.puzzle': 'पहेलियाँ',
+      // Voice Navigation (Hindi)
+      'voice.start': 'वॉइस नेविगेशन शुरू करें',
+      'voice.help': 'वॉइस सहायता',
+      'voice.status.idle': 'निष्क्रिय',
+      'voice.status.listening': 'सुन रहे हैं',
+      'voice.status.processing': 'प्रसंस्करण',
+      // Guest Access (Hindi)
+      'guest.continue': 'अतिथि के रूप में जारी रखें',
+      'guest.benefits': 'खाते की आवश्यकता नहीं, तुरंत सीखना शुरू करें। प्रगति स्थानीय रूप से सहेजी जाती है।',
+      'guest.mode': 'अतिथि मोड',
       // Add more keys as needed
     },
     or: {
@@ -565,6 +585,16 @@ const i18n = (() => {
       'games.cat.tech': 'ପ୍ରଯୁକ୍ତି',
       'games.cat.eng': 'ଇଞ୍ଜିନିୟରିଂ',
       'games.cat.puzzle': 'ପହେଳି',
+      // Voice Navigation (Odia)
+      'voice.start': 'ଭଏସ୍ ନେଭିଗେସନ୍ ଆରମ୍ଭ କରନ୍ତୁ',
+      'voice.help': 'ଭଏସ୍ ସହାୟତା',
+      'voice.status.idle': 'ନିଷ୍କ୍ରିୟ',
+      'voice.status.listening': 'ଶୁଣୁଛନ୍ତି',
+      'voice.status.processing': 'ପ୍ରକ୍ରିୟାକରଣ',
+      // Guest Access (Odia)
+      'guest.continue': 'ଅତିଥି ଭାବରେ ଜାରି ରଖନ୍ତୁ',
+      'guest.benefits': 'ଖାତା ଆବଶ୍ୟକ ନାହିଁ, ତୁରନ୍ତ ଶିଖିବା ଆରମ୍ଭ କରନ୍ତୁ। ପ୍ରଗତି ସ୍ଥାନୀୟ ଭାବରେ ସେଭ୍ ହୁଏ।',
+      'guest.mode': 'ଅତିଥି ମୋଡ୍',
       // Add more keys as needed
     }
   };
@@ -676,6 +706,11 @@ const i18n = (() => {
     translateDOM();
     // Remove i18n-wait class for FOUC prevention
     document.documentElement.classList.remove('i18n-wait');
+    
+    // Re-translate after a short delay to ensure all elements are loaded
+    setTimeout(() => {
+      translateDOM();
+    }, 500);
   }
 
   return { init, setLang, translateDOM, speak, createLanguageToggle };
