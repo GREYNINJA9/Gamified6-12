@@ -29,19 +29,78 @@ class GuestAccessManager {
         Offline.store('guest_progress', this.sessionId, data);
     }
 
-    migrateToRegistered(credentials) {
-        // Migrate guest progress to registered account
-        // ...implementation...
+    async migrateToRegistered(credentials) {
+        const guestSession = localStorage.getItem('sv_guest_session');
+        if (!guestSession) return;
+        // Example: migrate guest_progress to progress store
+        const db = Offline.getDB();
+        const tx = db.transaction(['guest_progress', 'progress', 'guest_sessions', 'gamification'], 'readwrite');
+        const guestProgressStore = tx.objectStore('guest_progress');
+        const progressStore = tx.objectStore('progress');
+        const gamificationStore = tx.objectStore('gamification');
+        // Migrate progress
+        const guestProgressReq = guestProgressStore.get(guestSession);
+        guestProgressReq.onsuccess = async () => {
+            const guestProgress = guestProgressReq.result;
+            if (guestProgress) {
+                await progressStore.put({ key: credentials.email, data: guestProgress.data });
+            }
+            // Migrate gamification
+            const guestGamificationReq = gamificationStore.get(guestSession);
+            guestGamificationReq.onsuccess = async () => {
+                const guestGamification = guestGamificationReq.result;
+                if (guestGamification) {
+                    await gamificationStore.put({ key: credentials.email, data: guestGamification.data });
+                }
+                // Cleanup guest data
+                await guestProgressStore.delete(guestSession);
+                await gamificationStore.delete(guestSession);
+                localStorage.removeItem('sv_guest_session');
+                // Log migration
+                console.log('Guest data migrated to registered user:', credentials.email);
+            };
+        };
     }
 
-    exportGuestData() {
-        // Export guest data for backup
-        // ...implementation...
+    async exportGuestData() {
+        const guestSession = localStorage.getItem('sv_guest_session');
+        if (!guestSession) return null;
+        const db = Offline.getDB();
+        const tx = db.transaction(['guest_progress', 'gamification'], 'readonly');
+        const guestProgressStore = tx.objectStore('guest_progress');
+        const gamificationStore = tx.objectStore('gamification');
+        const guestProgressReq = guestProgressStore.get(guestSession);
+        guestProgressReq.onsuccess = () => {
+            const guestProgress = guestProgressReq.result;
+            const guestGamificationReq = gamificationStore.get(guestSession);
+            guestGamificationReq.onsuccess = () => {
+                const guestGamification = guestGamificationReq.result;
+                return JSON.stringify({ progress: guestProgress, gamification: guestGamification });
+            };
+        };
     }
 
-    cleanupOldSessions() {
-        // Cleanup old guest sessions
-        // ...implementation...
+    async cleanupOldSessions() {
+        const db = Offline.getDB();
+        const tx = db.transaction(['guest_sessions', 'guest_progress'], 'readwrite');
+        const guestSessionsStore = tx.objectStore('guest_sessions');
+        const guestProgressStore = tx.objectStore('guest_progress');
+        const now = Date.now();
+        const thirtyDays = 30 * 24 * 60 * 60 * 1000;
+        const sessionsReq = guestSessionsStore.getAll();
+        sessionsReq.onsuccess = () => {
+            const sessions = sessionsReq.result;
+            for (const session of sessions) {
+                if (session.data.created && now - session.data.created > thirtyDays) {
+                    guestSessionsStore.delete(session.key);
+                    guestProgressStore.delete(session.key);
+                }
+            }
+        };
+    }
+    hasGuestData() {
+        const guestSession = localStorage.getItem('sv_guest_session');
+        return !!guestSession;
     }
 }
 

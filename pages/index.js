@@ -1,5 +1,5 @@
 import Footer from '../components/Footer';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const DEBUG = true; // Set to true for debugging logs
 
@@ -8,6 +8,10 @@ export default function Home() {
   const vantaInstance = useRef(null);
   const vantaError = useRef(null);
   const loading = useRef(true);
+
+  const [form, setForm] = useState({ email: '', password: '', confirm: '' });
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   useEffect(() => {
     let mounted = true;
@@ -98,6 +102,27 @@ export default function Home() {
 
     initPageEffects();
   }, []);
+
+  function handleChange(e) {
+    setForm({ ...form, [e.target.name]: e.target.value });
+    setError('');
+  }
+
+  function validate() {
+    if (!form.email.match(/^[^@]+@[^@]+\\.[^@]+$/)) return 'Enter a valid email.';
+    if (form.password.length < 8) return 'Password must be at least 8 characters.';
+    if (form.password !== form.confirm) return 'Passwords do not match.';
+    return '';
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const err = validate();
+    if (err) return setError(err);
+    setSuccess('Account created! (Demo only)');
+    setError('');
+    // TODO: Integrate with backend or offline.js
+  }
 
   return (
     <div className="bg-gray-50">

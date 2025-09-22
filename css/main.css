@@ -1,33 +1,53 @@
 /* Minimal main.css for legacy base styles */
-html, body {
-  margin: 0;
-  padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  background: #f3f4f6;
-  color: #222;
+/* ...other styles... */
+
+
+@media (max-width: 640px) {
+  #hero .container {
+    padding: 1.2rem 1rem;
+    border-radius: 0.7rem;
+  }
+  #hero h1 {
+    text-shadow:
+      0 1px 4px rgba(0,0,0,0.38),
+      0 0px 1px rgba(30,58,138,0.18);
+  }
 }
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 600;
-  margin: 0.5em 0;
+
+/* High Contrast Mode Overrides */
+.high-contrast #hero .container {
+  background: #fff !important;
+  color: #222 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
 }
-a {
-  color: #2563eb;
-  text-decoration: none;
+.high-contrast #hero h1, .high-contrast #hero p {
+  text-shadow: none !important;
+  color: #222 !important;
 }
-a:hover {
-  text-decoration: underline;
+
+/* Additional Hero Enhancements */
+#hero { position: relative; }
+#hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1;
+  pointer-events: none;
 }
-input, button, select, textarea {
-  font-family: inherit;
-  font-size: 1rem;
+#hero h1,
+#hero p { text-shadow: 0 2px 8px rgba(0,0,0,0.6), 0 1px 0 rgba(0,0,0,0.7); }
+@media (min-width: 768px) {
+  #hero h1 { text-shadow: 0 3px 14px rgba(0,0,0,0.65), 0 2px 0 rgba(0,0,0,0.75); }
 }
-button {
-  cursor: pointer;
-}
-/* Legacy container for static HTML compatibility */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem;
-}
+
+/* Accessibility fallbacks for hero */
+.high-contrast #hero::before { background: rgba(0,0,0,0.7) !important; }
+.high-contrast #hero h1,
+.high-contrast #hero p { text-shadow: none !important; }
+@media (prefers-reduced-transparency: reduce) { #hero::before { background: rgba(0,0,0,0.7); } }
+
+/* Chevron icon contrast enhancement */
+#hero a.text-white i,
+#hero a.text-white svg { filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6)); }

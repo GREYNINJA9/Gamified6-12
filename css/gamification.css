@@ -1,17 +1,108 @@
 /* Gamification CSS */
-.coin-counter { color: #fbbf24; font-weight: bold; font-size: 1.25rem; display: flex; align-items: center; gap: 0.5rem; }
-.coin-icon { width: 32px; height: 32px; background: radial-gradient(circle,#fbbf24 60%,#f59e42 100%); border-radius: 50%; display: inline-block; }
-.badge-list { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem; }
-.badge { background: #fff; border-radius: 0.75rem; box-shadow: 0 2px 8px #0001; padding: 0.5rem 1rem; font-size: 0.95rem; color: #3b82f6; display: flex; align-items: center; gap: 0.5rem; }
-.badge.unlocked { background: #f3f4f6; color: #16a34a; }
-.streak-bar { background: #fde68a; border-radius: 0.5rem; height: 16px; width: 100%; margin-top: 0.5rem; position: relative; }
-.streak-fire { position: absolute; left: 0; top: -8px; width: 24px; height: 24px; background: url('/static/fire.png') no-repeat center/contain; }
-.village-view { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; }
-.village-building { background: #fff; border-radius: 1rem; box-shadow: 0 2px 8px #0001; padding: 1rem; width: 120px; text-align: center; }
-.leaderboard-widget { background: #f3f4f6; border-radius: 1rem; padding: 1rem; margin-top: 1rem; }
-.challenge-card { background: #fff; border-radius: 1rem; box-shadow: 0 2px 8px #0001; padding: 1rem; margin-top: 1rem; }
-.coin-animate { animation: coinPop 0.7s cubic-bezier(.5,1.5,.5,1) forwards; }
-@keyframes coinPop { 0% { transform: scale(1); } 60% { transform: scale(1.4); } 100% { transform: scale(1); } }
-.confetti { position: fixed; top:0; left:0; width:100vw; height:100vh; pointer-events:none; z-index:100; }
-.lite .coin-counter, .lite .badge, .lite .village-building { box-shadow: none; background: #f3f4f6; }
-@media (max-width: 600px) { .coin-counter { font-size: 1rem; } .badge { font-size: 0.85rem; } .village-building { width: 90px; } }
+
+.coin-counter {
+	color: var(--accent-orange, #fbbf24);
+	font-weight: bold;
+	font-size: 1.25rem;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+.coin-icon {
+	width: 32px;
+	height: 32px;
+	background: radial-gradient(circle, var(--accent-orange, #fbbf24) 60%, var(--accent-orange, #f59e42) 100%);
+	border-radius: 50%;
+	display: inline-block;
+}
+.badge-list {
+	display: flex;
+	gap: 0.5rem;
+	flex-wrap: wrap;
+	margin-top: 0.5rem;
+}
+.badge {
+	background: #fff;
+	border-radius: 0.75rem;
+	box-shadow: 0 2px 8px #0001;
+	padding: 0.5rem 1rem;
+	font-size: 0.95rem;
+	color: var(--link-primary, #3b82f6);
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+.badge.unlocked {
+	background: var(--bg-primary, #f3f4f6);
+	color: var(--accent-green, #16a34a);
+}
+.streak-bar {
+	background: #fde68a;
+	border-radius: 0.5rem;
+	height: 16px;
+	width: 100%;
+	margin-top: 0.5rem;
+	position: relative;
+}
+.streak-fire {
+	position: absolute;
+	left: 0;
+	top: -8px;
+	width: 24px;
+	height: 24px;
+	background: url('/static/fire.png') no-repeat center/contain;
+}
+.village-view {
+	display: flex;
+	gap: 1rem;
+	flex-wrap: wrap;
+	margin-top: 1rem;
+}
+.village-building {
+	background: #fff;
+	border-radius: 1rem;
+	box-shadow: 0 2px 8px #0001;
+	padding: 1rem;
+	width: 120px;
+	text-align: center;
+}
+.leaderboard-widget {
+	background: var(--bg-primary, #f3f4f6);
+	border-radius: 1rem;
+	padding: 1rem;
+	margin-top: 1rem;
+}
+.challenge-card {
+	background: #fff;
+	border-radius: 1rem;
+	box-shadow: 0 2px 8px #0001;
+	padding: 1rem;
+	margin-top: 1rem;
+}
+.coin-animate {
+	animation: coinPop 0.7s cubic-bezier(.5,1.5,.5,1) forwards;
+	will-change: transform;
+}
+@keyframes coinPop {
+	0% { transform: scale(1); }
+	60% { transform: scale(1.4); }
+	100% { transform: scale(1); }
+}
+.confetti {
+	position: fixed;
+	top:0;
+	left:0;
+	width:100vw;
+	height:100vh;
+	pointer-events:none;
+	z-index:100;
+}
+.lite .coin-counter, .lite .badge, .lite .village-building {
+	box-shadow: none;
+	background: var(--bg-primary, #f3f4f6);
+}
+@media (max-width: 600px) {
+	.coin-counter { font-size: 1rem; }
+	.badge { font-size: 0.85rem; }
+	.village-building { width: 90px; }
+}

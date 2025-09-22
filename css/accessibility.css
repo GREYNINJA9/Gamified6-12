@@ -1,13 +1,14 @@
 /* Accessibility & Inclusivity CSS */
 
+/* Accessibility & Inclusivity CSS */
 .guest-access-btn {
-  background: #2563eb;
+  background: var(--link-primary);
   color: #fff;
   font-size: 1.25rem;
   border-radius: 0.75rem;
   padding: 1rem 2rem;
   font-weight: bold;
-  box-shadow: 0 2px 8px #2563eb33;
+  box-shadow: 0 2px 8px var(--link-primary, #2563eb33);
   transition: background 0.2s;
   cursor: pointer;
 }
@@ -15,12 +16,12 @@
   background: #1e40af;
 }
 .guest-status {
-  color: #2563eb;
+  color: var(--link-primary);
   font-weight: bold;
   margin-top: 0.5rem;
 }
 .voice-nav-btn {
-  background: #059669;
+  background: var(--accent-green);
   color: #fff;
   border-radius: 50%;
   width: 56px;
@@ -29,26 +30,26 @@
   align-items: center;
   justify-content: center;
   font-size: 2rem;
-  box-shadow: 0 2px 8px #05966933;
+  box-shadow: 0 2px 8px var(--accent-green, #05966933);
   cursor: pointer;
   transition: background 0.2s;
 }
 .voice-nav-btn.listening {
-  background: #2563eb;
+  background: var(--link-primary);
   animation: pulse 1s infinite;
 }
 @keyframes pulse {
-  0% { box-shadow: 0 0 0 0 #2563eb55; }
-  70% { box-shadow: 0 0 0 10px #2563eb22; }
-  100% { box-shadow: 0 0 0 0 #2563eb55; }
+  0% { box-shadow: 0 0 0 0 var(--link-primary, #2563eb55); }
+  70% { box-shadow: 0 0 0 10px var(--link-primary, #2563eb22); }
+  100% { box-shadow: 0 0 0 0 var(--link-primary, #2563eb55); }
 }
 .voice-status {
   font-size: 1rem;
-  color: #059669;
+  color: var(--accent-green);
   margin-left: 1rem;
 }
 .audio-guided-btn {
-  background: #f59e42;
+  background: var(--accent-orange);
   color: #fff;
   border-radius: 0.5rem;
   padding: 0.5rem 1.25rem;

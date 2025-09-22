@@ -16,12 +16,37 @@ const Offline = (() => {
   function initDB() {
     // IndexedDB with stores: progress, activities, queue, meta, coins, badges, streaks, village, leaderboard, challenges, teacher_analytics, class_data, student_performance, weak_topics, difficulty_tracking
     return new Promise((resolve, reject) => {
-      const req = window.indexedDB.open('sv_db', 4); // version bump for analytics
+  const req = window.indexedDB.open('sv_db', 6); // version bump for auth/guest
       req.onupgradeneeded = e => {
         db = e.target.result;
         if (!db.objectStoreNames.contains('progress')) db.createObjectStore('progress', { keyPath: 'key' });
         if (!db.objectStoreNames.contains('activities')) db.createObjectStore('activities', { keyPath: 'key' });
         if (!db.objectStoreNames.contains('queue')) db.createObjectStore('queue', { keyPath: 'id', autoIncrement: true });
+        // Add users and sessions stores for v6
+        if (!db.objectStoreNames.contains('users')) {
+          const usersStore = db.createObjectStore('users', { keyPath: 'key' });
+          usersStore.createIndex('email', 'key', { unique: true });
+        }
+        if (!db.objectStoreNames.contains('sessions')) {
+          const sessionsStore = db.createObjectStore('sessions', { keyPath: 'key' });
+          sessionsStore.createIndex('token', 'key', { unique: true });
+        }
+        // Add guest stores for v6
+        if (!db.objectStoreNames.contains('guest_sessions')) {
+          db.createObjectStore('guest_sessions', { keyPath: 'key' });
+        }
+        if (!db.objectStoreNames.contains('guest_progress')) {
+          db.createObjectStore('guest_progress', { keyPath: 'key' });
+        }
+        // Add users and sessions stores for v5
+        if (!db.objectStoreNames.contains('users')) {
+          const usersStore = db.createObjectStore('users', { keyPath: 'key' });
+          usersStore.createIndex('email', 'key', { unique: true });
+        }
+        if (!db.objectStoreNames.contains('sessions')) {
+          const sessionsStore = db.createObjectStore('sessions', { keyPath: 'key' });
+          sessionsStore.createIndex('token', 'key', { unique: true });
+        }
         if (!db.objectStoreNames.contains('meta')) db.createObjectStore('meta', { keyPath: 'key' });
         if (!db.objectStoreNames.contains('coins')) db.createObjectStore('coins', { keyPath: 'key' });
         if (!db.objectStoreNames.contains('badges')) db.createObjectStore('badges', { keyPath: 'key' });
@@ -128,7 +153,61 @@ const Offline = (() => {
     });
   }
 
-  // --- Analytics-specific functions ---
+  // --- User/session helpers (global, non-ESM) ---
+  function storeUser(email, userData) {
+    return new Promise((resolve, reject) => {
+      if (!db) return reject(new Error('DB not initialized'));
+      const tx = db.transaction('users', 'readwrite');
+      const s = tx.objectStore('users');
+      s.put({ key: email, data: userData });
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  }
+
+  function getUser(email) {
+    return new Promise((resolve, reject) => {
+      if (!db) return resolve(null);
+      const tx = db.transaction('users', 'readonly');
+      const s = tx.objectStore('users');
+      const req = s.get(email);
+      req.onsuccess = () => resolve(req.result ? req.result.data : null);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  function storeSession(token, sessionData) {
+    return new Promise((resolve, reject) => {
+      if (!db) return reject(new Error('DB not initialized'));
+      const tx = db.transaction('sessions', 'readwrite');
+      const s = tx.objectStore('sessions');
+      s.put({ key: token, data: sessionData });
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  }
+
+  function getSession(token) {
+    return new Promise((resolve, reject) => {
+      if (!db) return resolve(null);
+      const tx = db.transaction('sessions', 'readonly');
+      const s = tx.objectStore('sessions');
+      const req = s.get(token);
+      req.onsuccess = () => resolve(req.result ? req.result.data : null);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  function deleteSession(token) {
+    return new Promise((resolve, reject) => {
+      if (!db) return resolve();
+      const tx = db.transaction('sessions', 'readwrite');
+      const s = tx.objectStore('sessions');
+      s.delete(token);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  }
   function storeAnalytics(type, data) {
     if (!db) return;
     const tx = db.transaction('teacher_analytics', 'readwrite');
@@ -221,6 +300,12 @@ const Offline = (() => {
     toggleLiteMode,
     isLiteMode,
     updateStatusIndicator,
+    // Auth/session
+    storeUser,
+    getUser,
+    storeSession,
+    getSession,
+    deleteSession,
     // Analytics
     storeAnalytics,
     getClassData,
@@ -231,3 +316,6 @@ const Offline = (() => {
     anonymize
   };
 })();
+
+// Expose globally for legacy usage
+try { window.Offline = Offline; } catch (_) {}

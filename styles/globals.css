@@ -25,38 +25,43 @@ a {
   text-decoration: none;
 }
 
-* {
+:root {
+  --bg-primary: #f3f4f6;
+  --text-primary: #222222;
+  --link-primary: #2563eb;
+  --accent-green: #22c55e;
+  --accent-orange: #f97316;
+}
+
+html, body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+html body { background: var(--bg-primary) !important; }
+
+*, *::before, *::after {
   box-sizing: border-box;
 }
 
-.no-js {
-  opacity: 0;
-}
-
-.loading {
-  opacity: 0.6;
-  pointer-events: none;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }
 
-@media (prefers-contrast: high) {
-  .high-contrast {
-    background: #000 !important;
-    color: #fff !important;
+@media (forced-colors: active) {
+  html, body {
+    background: Canvas !important;
+    color: CanvasText !important;
   }
 }
 
 @media print {
-  .no-print {
-    display: none !important;
+  html, body {
+    background: #fff !important;
+    color: #000 !important;
   }
 }
