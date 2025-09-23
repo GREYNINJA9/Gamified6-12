@@ -125,7 +125,7 @@ export default function Home() {
   }
 
   return (
-    <div className="bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-[#0f65bb] to-[#b4204f]">
       {/* Hero Section with Vanta.js Background */}
       <div id="hero" className="relative h-screen flex items-center justify-center overflow-hidden">
         <div ref={vantaRef} className="absolute inset-0 z-0" id="vanta-bg"></div>
@@ -147,12 +147,12 @@ export default function Home() {
       </div>
 
       {/* Features Section */}
-      <section id="features" className="py-20 bg-white">
+      <section id="features" className="min-h-screen bg-gradient-to-br from-[#cfe0f1] to-[#eef09b]">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-16" data-aos="fade-up">Key Features</h2>
           <div className="grid md:grid-cols-3 gap-10">
             {/* Feature 1 */}
-            <div className="bg-gray-50 p-8 rounded-xl shadow-md hover:shadow-lg transition duration-300" data-aos="fade-up" data-aos-delay="100">
+            <div className="bg-gray-50 p-8 rounded-xl shadow-md hover:shadow-lg transition duration-1000" data-aos="fade-up" data-aos-delay="100">
               <div className="text-blue-600 mb-4">
                 <i data-feather="globe" className="w-10 h-10"></i>
               </div>
@@ -204,10 +204,10 @@ export default function Home() {
               <p className="text-gray-600 text-center">Interactive problems and real-world applications</p>
             </div>
             
-            {/* Science */}
+            {/* Science (ensure consistent structure and alignment) */}
             <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition duration-300 transform hover:-translate-y-2" data-aos="zoom-in" data-aos-delay="100">
               <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mb-4 mx-auto">
-                <i data-feather="flask" className="w-8 h-8 text-green-600"></i>
+                <i data-feather="thermometer" className="w-8 h-8 text-green-600"></i>
               </div>
               <h3 className="text-xl font-bold text-center mb-2">Science</h3>
               <p className="text-gray-600 text-center">Virtual experiments and discovery games</p>
@@ -313,10 +313,10 @@ export default function Home() {
             <div>
               <h4 className="text-xl font-bold mb-4">Connect</h4>
               <div className="flex space-x-4">
-                <a href="#" className="text-gray-400 hover:text-white transition duration-300"><i data-feather="facebook"></i></a>
-                <a href="#" className="text-gray-400 hover:text-white transition duration-300"><i data-feather="twitter"></i></a>
-                <a href="#" className="text-gray-400 hover:text-white transition duration-300"><i data-feather="instagram"></i></a>
-                <a href="#" className="text-gray-400 hover:text-white transition duration-300"><i data-feather="youtube"></i></a>
+                <a href="https://www.facebook.com/dheodisha/" className="text-gray-400 hover:text-white transition duration-300"><i data-feather="facebook"></i></a>
+                <a href="https://x.com/dhe_odisha" className="text-gray-400 hover:text-white transition duration-300"><i data-feather="twitter"></i></a>
+                <a href="https://www.instagram.com/hedodisha/?hl=en" className="text-gray-400 hover:text-white transition duration-300"><i data-feather="instagram"></i></a>
+                <a href="https://www.youtube.com/@directoratehighersecondary" className="text-gray-400 hover:text-white transition duration-300"><i data-feather="youtube"></i></a>
               </div>
               <p className="text-gray-400 mt-4">support@stemvillage.edu.in</p>
             </div>

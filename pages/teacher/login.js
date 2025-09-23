@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const VoiceNavigationSystem = dynamic(() => import('../../js/voice-navigation-system.js'), { ssr: false });
 
@@ -65,7 +66,13 @@ export default function TeacherLogin() {
       setError('Please enter both Email and Password');
       return;
     }
-    setError('');
+    // Mock auth for teacher
+    if (email === 'nikhnin60@gmail.com' && password === 'Grey3503') {
+      setError('');
+      window.location.href = '/teacher/dashboard';
+      return;
+    }
+    setError('Invalid credentials');
   };
 
   if (loading) {
@@ -80,10 +87,13 @@ export default function TeacherLogin() {
   }
 
   return (
-    <div className="bg-gray-50">
+    <div className="bg-gradient-to-br from-green-50 via-teal-50 to-blue-50 min-h-screen">
       {/* Voice Navigation Header */}
       <header className="flex justify-between items-center px-4 py-2 bg-green-50">
-        <div id="lang-toggle"></div>
+        <div className="flex items-center gap-3">
+          <Image src="/logo-white.png" alt="Logo" width={36} height={36} className="rounded" />
+          <div id="lang-toggle"></div>
+        </div>
         <div className="flex gap-2">
           <button id="voice-nav-btn" className="voice-nav-btn" title="Start Voice Navigation" data-i18n="voice.start">
             <i data-feather="mic"></i>
@@ -97,6 +107,11 @@ export default function TeacherLogin() {
 
       <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-xl" data-aos="fade-up">
+          {/* Toggle between Student and Teacher */}
+          <div className="flex rounded-lg p-1 bg-green-100 text-sm font-semibold">
+            <Link href="/login" className="flex-1 text-center py-2 rounded-md">Student</Link>
+            <Link href="/teacher/login" className="flex-1 text-center py-2 rounded-md bg-white shadow">Teacher</Link>
+          </div>
           <div className="text-center">
             <img className="mx-auto h-24 w-auto" src="/static/logo.png" alt="STEM Village Logo" />
             <h2 className="mt-6 text-3xl font-extrabold text-gray-900" data-i18n="teacherlogin.title">
@@ -197,7 +212,7 @@ export default function TeacherLogin() {
             </div>
 
             <div className="mt-6">
-              <a href="https://gov.odisha.gov.in/" target="_blank" rel="noopener" className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+              <a href="https://odisha.gov.in/" target="_blank" rel="noopener" className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                 <i data-feather="shield" className="h-5 w-5"></i>
                 <span className="ml-2">Government Portal</span>
               </a>

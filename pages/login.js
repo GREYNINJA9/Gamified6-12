@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const VoiceNavigationSystem = dynamic(() => import('../js/voice-navigation-system.js'), { ssr: false });
 const GuestAccessManager = dynamic(() => import('../js/guest-access-manager.js'), { ssr: false });
@@ -66,8 +67,13 @@ export default function Login() {
       setError('Please enter both Student ID and Password');
       return;
     }
-    // Integrate with login logic
-    setError('');
+    // Mock auth for student
+    if (studentId === '24001008040' && password === 'Grey3503') {
+      setError('');
+      window.location.href = '/dashboard';
+      return;
+    }
+    setError('Invalid credentials');
   };
 
   const handleGuestAccess = () => {
@@ -80,7 +86,7 @@ export default function Login() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-blue-50">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#e3e6a7] to-[#8587ff]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading...</p>
@@ -90,10 +96,13 @@ export default function Login() {
   }
 
   return (
-    <div className="bg-gray-50">
+    <div className="bg-gradient-to-br from-blue-50 via-cyan-50 to-pink-50 min-h-screen">
       {/* Voice Navigation Header */}
       <header className="flex justify-between items-center px-4 py-2 bg-blue-50">
-        <div id="lang-toggle"></div>
+        <div className="flex items-center gap-3">
+          <Image src="/logo-white.png" alt="Logo" width={36} height={36} className="rounded" />
+          <div id="lang-toggle"></div>
+        </div>
         <div className="flex gap-2">
           <button id="voice-nav-btn" className="voice-nav-btn" title="Start Voice Navigation" data-i18n="voice.start">
             <i data-feather="mic"></i>
@@ -107,6 +116,11 @@ export default function Login() {
 
       <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-xl" data-aos="fade-up">
+          {/* Toggle between Student and Teacher */}
+          <div className="flex rounded-lg p-1 bg-blue-100 text-sm font-semibold">
+            <Link href="/login" className="flex-1 text-center py-2 rounded-md bg-white shadow">Student</Link>
+            <Link href="/teacher/login" className="flex-1 text-center py-2 rounded-md">Teacher</Link>
+          </div>
           <div className="text-center">
             <img className="mx-auto h-24 w-auto" src="/static/logo.png" alt="STEM Village Logo" />
             <h2 className="mt-6 text-3xl font-extrabold text-gray-900" data-i18n="login.title">

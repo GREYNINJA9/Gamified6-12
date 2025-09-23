@@ -1,4 +1,3 @@
-// STEM Village Offline Module
 const Offline = (() => {
   let db = null;
   let liteMode = false;
@@ -13,58 +12,362 @@ const Offline = (() => {
     document.documentElement.classList.toggle('lite', liteMode);
   }
 
+  // --- DB Initialization ---
+  let dbReadyPromise = null;
   function initDB() {
-    // IndexedDB with stores: progress, activities, queue, meta, coins, badges, streaks, village, leaderboard, challenges, teacher_analytics, class_data, student_performance, weak_topics, difficulty_tracking
-    return new Promise((resolve, reject) => {
-  const req = window.indexedDB.open('sv_db', 6); // version bump for auth/guest
+    // IndexedDB with advanced analytics stores
+    dbReadyPromise = new Promise((resolve, reject) => {
+      const req = window.indexedDB.open('sv_db', 9); // version bump for assignments, submissions, files, notifications
       req.onupgradeneeded = e => {
         db = e.target.result;
-        if (!db.objectStoreNames.contains('progress')) db.createObjectStore('progress', { keyPath: 'key' });
-        if (!db.objectStoreNames.contains('activities')) db.createObjectStore('activities', { keyPath: 'key' });
-        if (!db.objectStoreNames.contains('queue')) db.createObjectStore('queue', { keyPath: 'id', autoIncrement: true });
-        // Add users and sessions stores for v6
-        if (!db.objectStoreNames.contains('users')) {
-          const usersStore = db.createObjectStore('users', { keyPath: 'key' });
-          usersStore.createIndex('email', 'key', { unique: true });
+        // --- Analytics Stores ---
+        const stores = [
+          ['progress', { keyPath: 'key' }],
+          ['activities', { keyPath: 'key' }],
+          ['queue', { keyPath: 'id', autoIncrement: true }],
+          ['users', { keyPath: 'key' }],
+          ['sessions', { keyPath: 'key' }],
+          // ...existing code...
+        ];
+        for (const [name, opts] of stores) {
+          if (!db.objectStoreNames.contains(name)) db.createObjectStore(name, opts);
         }
-        if (!db.objectStoreNames.contains('sessions')) {
-          const sessionsStore = db.createObjectStore('sessions', { keyPath: 'key' });
-          sessionsStore.createIndex('token', 'key', { unique: true });
-        }
-        // Add guest stores for v6
-        if (!db.objectStoreNames.contains('guest_sessions')) {
-          db.createObjectStore('guest_sessions', { keyPath: 'key' });
-        }
-        if (!db.objectStoreNames.contains('guest_progress')) {
-          db.createObjectStore('guest_progress', { keyPath: 'key' });
-        }
-        // Add users and sessions stores for v5
-        if (!db.objectStoreNames.contains('users')) {
-          const usersStore = db.createObjectStore('users', { keyPath: 'key' });
-          usersStore.createIndex('email', 'key', { unique: true });
-        }
-        if (!db.objectStoreNames.contains('sessions')) {
-          const sessionsStore = db.createObjectStore('sessions', { keyPath: 'key' });
-          sessionsStore.createIndex('token', 'key', { unique: true });
-        }
-        if (!db.objectStoreNames.contains('meta')) db.createObjectStore('meta', { keyPath: 'key' });
-        if (!db.objectStoreNames.contains('coins')) db.createObjectStore('coins', { keyPath: 'key' });
-        if (!db.objectStoreNames.contains('badges')) db.createObjectStore('badges', { keyPath: 'key' });
-        if (!db.objectStoreNames.contains('streaks')) db.createObjectStore('streaks', { keyPath: 'key' });
-        if (!db.objectStoreNames.contains('village')) db.createObjectStore('village', { keyPath: 'key' });
-        if (!db.objectStoreNames.contains('leaderboard')) db.createObjectStore('leaderboard', { keyPath: 'key' });
-        if (!db.objectStoreNames.contains('challenges')) db.createObjectStore('challenges', { keyPath: 'key' });
-        // Teacher analytics stores
-        if (!db.objectStoreNames.contains('teacher_analytics')) db.createObjectStore('teacher_analytics', { keyPath: 'type' });
-        if (!db.objectStoreNames.contains('class_data')) db.createObjectStore('class_data', { keyPath: 'classId' });
-        if (!db.objectStoreNames.contains('student_performance')) db.createObjectStore('student_performance', { keyPath: 'studentId' });
-        if (!db.objectStoreNames.contains('weak_topics')) db.createObjectStore('weak_topics', { keyPath: 'classId' });
-        if (!db.objectStoreNames.contains('difficulty_tracking')) db.createObjectStore('difficulty_tracking', { keyPath: 'id', autoIncrement: true });
+        // ...existing code...
       };
-      req.onsuccess = e => { db = e.target.result; resolve(); };
-      req.onerror = reject;
+      req.onsuccess = e => {
+        db = e.target.result;
+        resolve(db);
+      };
+      req.onerror = e => reject(e);
+  });
+  return dbReadyPromise;
+  }
+  function getAsync(store, key) {
+    return new Promise(res => {
+      get(store, key, res);
     });
   }
+  // ...existing code...
+// --- Analytics Data Storage Methods ---
+function storeActivityEvent(eventData) {
+  if (!db) return;
+  const tx = db.transaction('activity_events', 'readwrite');
+  tx.objectStore('activity_events').add(eventData);
+}
+function getActivityEventsByTimeframe(classId, startDate, endDate, cb) {
+  if (!db) return;
+  const tx = db.transaction('activity_events', 'readonly');
+  const store = tx.objectStore('activity_events');
+  const req = store.openCursor();
+  const results = [];
+  req.onsuccess = e => {
+    const cursor = e.target.result;
+    if (cursor) {
+      const v = cursor.value;
+      if ((!classId || v.classId === classId) && v.timestamp >= startDate && v.timestamp <= endDate) results.push(v);
+      cursor.continue();
+    } else {
+      cb(results);
+    }
+  };
+}
+function bulkStorePerformanceData(performanceArray) {
+  if (!db) return;
+  const tx = db.transaction('student_performance', 'readwrite');
+  for (const item of performanceArray) {
+    tx.objectStore('student_performance').put(item);
+  }
+            // ...existing code...
+  function updateWeakTopics(classId, weakTopicsData) {
+    if (!db) return;
+    const tx = db.transaction('weak_topics', 'readwrite');
+    tx.objectStore('weak_topics').put({ classId, data: weakTopicsData, lastUpdated: Date.now() });
+  }
+  function getWeakTopicsHistory(classId, timeframe, cb) {
+    if (!db) return;
+    const tx = db.transaction('weak_topics', 'readonly');
+    const store = tx.objectStore('weak_topics');
+    const req = store.get(classId);
+    req.onsuccess = () => {
+      const val = req.result;
+      if (!val) return cb([]);
+      if (!timeframe) return cb(val.data);
+      // Filter by timeframe
+      cb(val.data.filter(t => t.lastUpdated >= Date.now() - timeframe));
+    };
+  }
+  function compareWeakTopicsAcrossClasses(classIds, cb) {
+    if (!db) return;
+    const tx = db.transaction('weak_topics', 'readonly');
+    const store = tx.objectStore('weak_topics');
+    const req = store.openCursor();
+    const results = [];
+    req.onsuccess = e => {
+      const cursor = e.target.result;
+      if (cursor) {
+        if (classIds.includes(cursor.value.classId)) results.push(cursor.value);
+        cursor.continue();
+      } else {
+        cb(results);
+      }
+    };
+  }
+  function getTopicPerformanceTimeline(classId, topicId, cb) {
+    if (!db) return;
+    // ...implementation for topic timeline...
+    cb([]);
+  }
+  // --- Analytics Caching System ---
+  function cacheAnalyticsResult(key, data, ttl) {
+    if (!db) return;
+    const tx = db.transaction('analytics_cache', 'readwrite');
+    tx.objectStore('analytics_cache').put({ cacheKey: key, data, computedAt: Date.now(), expiresAt: Date.now() + (ttl || 3600)*1000 });
+  }
+  function getCachedAnalytics(key, cb) {
+    if (!db) return cb(null);
+    const tx = db.transaction('analytics_cache', 'readonly');
+    const req = tx.objectStore('analytics_cache').get(key);
+    req.onsuccess = () => {
+      const val = req.result;
+      if (!val || val.expiresAt < Date.now()) return cb(null);
+      cb(val.data);
+    };
+  }
+  function invalidateAnalyticsCache(pattern) {
+    if (!db) return;
+    const tx = db.transaction('analytics_cache', 'readwrite');
+    const store = tx.objectStore('analytics_cache');
+    const req = store.openCursor();
+    req.onsuccess = e => {
+      const cursor = e.target.result;
+      if (cursor) {
+        if (cursor.key.includes(pattern)) store.delete(cursor.key);
+        cursor.continue();
+      }
+    };
+  }
+  function getAnalyticsCacheStats(cb) {
+    if (!db) return cb({});
+    const tx = db.transaction('analytics_cache', 'readonly');
+    const store = tx.objectStore('analytics_cache');
+    const req = store.openCursor();
+    let count = 0;
+    req.onsuccess = e => {
+      const cursor = e.target.result;
+      if (cursor) {
+        count++;
+        cursor.continue();
+      } else {
+        cb({ count });
+      }
+    };
+  }
+  // --- Data Export and Reporting ---
+  function exportAnalyticsData(format, filters, options) {
+    // ...implementation for export...
+  }
+  function generateAnalyticsReport(template, parameters) {
+    // ...implementation for report generation...
+  }
+  function getAnalyticsDataForCSV(classId, metrics, timeframe, cb) {
+    // ...implementation for CSV export...
+    cb([]);
+  }
+  function anonymizeAnalyticsData(data, level) {
+    // ...implementation for privacy...
+    return data;
+  }
+  // --- Real-time Analytics Support ---
+  function subscribeToActivityEvents(callback) {
+    // ...event streaming...
+  }
+  function getRecentActivitySummary(classId, limit, cb) {
+    if (!db) return cb([]);
+    const tx = db.transaction('activity_events', 'readonly');
+    const store = tx.objectStore('activity_events');
+    const req = store.openCursor(null, 'prev');
+    const results = [];
+    req.onsuccess = e => {
+      const cursor = e.target.result;
+      if (cursor && results.length < (limit || 20)) {
+        if (!classId || cursor.value.classId === classId) results.push(cursor.value);
+        cursor.continue();
+      } else {
+        cb(results);
+      }
+    };
+  }
+  function getCurrentPerformanceSnapshot(classId, cb) {
+    // ...implementation for real-time dashboard...
+    cb({});
+  }
+  // ...existing code...
+
+function deleteAssignment(assignmentId) {
+  if (!db) return;
+  const tx = db.transaction('assignments', 'readwrite');
+  tx.objectStore('assignments').delete(assignmentId);
+  // Cascade delete submissions/files/notifications
+  const txSub = db.transaction('submissions', 'readwrite');
+  const subStore = txSub.objectStore('submissions');
+  const reqSub = subStore.openCursor();
+  reqSub.onsuccess = e => {
+    const cursor = e.target.result;
+    if (cursor) {
+      if (cursor.value.assignmentId === assignmentId) subStore.delete(cursor.key);
+      cursor.continue();
+    }
+  };
+  const txFiles = db.transaction('assignment_files', 'readwrite');
+  const fileStore = txFiles.objectStore('assignment_files');
+  const reqFiles = fileStore.openCursor();
+  reqFiles.onsuccess = e => {
+    const cursor = e.target.result;
+    if (cursor) {
+      if (cursor.value.assignmentId === assignmentId) fileStore.delete(cursor.key);
+      cursor.continue();
+    }
+  };
+  const txNotif = db.transaction('assignment_notifications', 'readwrite');
+  const notifStore = txNotif.objectStore('assignment_notifications');
+  const reqNotif = notifStore.openCursor();
+  reqNotif.onsuccess = e => {
+    const cursor = e.target.result;
+    if (cursor) {
+      if (cursor.value.assignmentId === assignmentId) notifStore.delete(cursor.key);
+      cursor.continue();
+    }
+  };
+}
+
+// --- Submission Management ---
+function storeSubmission(submissionData) {
+  if (!db) return;
+  const tx = db.transaction('submissions', 'readwrite');
+  tx.objectStore('submissions').put(submissionData);
+}
+
+function getSubmissionsByAssignment(assignmentId, cb) {
+  if (!db) return;
+  const tx = db.transaction('submissions', 'readonly');
+  const store = tx.objectStore('submissions');
+  const req = store.openCursor();
+  const results = [];
+  req.onsuccess = e => {
+    const cursor = e.target.result;
+    if (cursor) {
+      if (cursor.value.assignmentId === assignmentId) results.push(cursor.value);
+      cursor.continue();
+    } else {
+      cb(results);
+    }
+  };
+}
+
+function getSubmissionsByStudent(studentId, cb) {
+  if (!db) return;
+  const tx = db.transaction('submissions', 'readonly');
+  const store = tx.objectStore('submissions');
+  const req = store.openCursor();
+  const results = [];
+  req.onsuccess = e => {
+    const cursor = e.target.result;
+    if (cursor) {
+      if (cursor.value.studentId === studentId) results.push(cursor.value);
+      cursor.continue();
+    } else {
+      cb(results);
+    }
+  };
+}
+
+function updateSubmissionGrade(submissionId, grade, feedback) {
+  if (!db) return;
+  const tx = db.transaction('submissions', 'readwrite');
+  const store = tx.objectStore('submissions');
+  const req = store.get(submissionId);
+  req.onsuccess = () => {
+    if (req.result) {
+      req.result.grade = grade;
+      req.result.feedback = feedback;
+      store.put(req.result);
+    }
+  };
+}
+
+// --- File Storage System ---
+function storeAssignmentFile(fileData, metadata) {
+  if (!db) return;
+  const tx = db.transaction('assignment_files', 'readwrite');
+  tx.objectStore('assignment_files').put({ ...metadata, fileData });
+}
+
+function getAssignmentFile(fileId, cb) {
+  if (!db) return;
+  const tx = db.transaction('assignment_files', 'readonly');
+  const store = tx.objectStore('assignment_files');
+  const req = store.get(fileId);
+  req.onsuccess = () => cb(req.result ? req.result.fileData : null);
+}
+
+// --- Assignment Analytics Storage ---
+function storeAssignmentAnalytics(assignmentId, analyticsData) {
+  if (!db) return;
+  const tx = db.transaction('teacher_analytics', 'readwrite');
+  tx.objectStore('teacher_analytics').put({ type: 'assignment_' + assignmentId, data: analyticsData });
+}
+
+// --- Queue System Enhancement ---
+function queueAssignmentOp(op) {
+  if (!db) return;
+  const tx = db.transaction('queue', 'readwrite');
+  tx.objectStore('queue').add(op);
+}
+
+// --- Notification Storage ---
+function storeAssignmentNotification(notification) {
+  if (!db) return;
+  const tx = db.transaction('assignment_notifications', 'readwrite');
+  tx.objectStore('assignment_notifications').put(notification);
+}
+
+function getAssignmentNotifications(userId, cb) {
+  if (!db) return;
+  const tx = db.transaction('assignment_notifications', 'readonly');
+  const store = tx.objectStore('assignment_notifications');
+  const req = store.openCursor();
+  const results = [];
+  req.onsuccess = e => {
+    const cursor = e.target.result;
+    if (cursor) {
+      if (cursor.value.userId === userId) results.push(cursor.value);
+      cursor.continue();
+    } else {
+      cb(results);
+    }
+  };
+}
+
+// --- Data Migration and Cleanup ---
+function migrateToV7() {
+  // Data migration logic for v7 upgrade
+  // ...
+}
+
+function cleanupExpiredAssignments() {
+  // Remove expired assignments
+  // ...
+}
+
+function exportAssignmentData() {
+  // Export assignments for backup
+  // ...
+}
+
+function anonymizeAssignmentData() {
+  // Anonymize assignment data for privacy
+  // ...
+}
 
   function store(storeName, key, data) {
     if (!db) return;
@@ -291,14 +594,38 @@ const Offline = (() => {
   }
 
   return {
+    // Analytics
+    storeActivityEvent,
+    getActivityEventsByTimeframe,
+    bulkStorePerformanceData,
+    getAggregatedPerformanceData,
+    updateWeakTopics,
+    getWeakTopicsHistory,
+    compareWeakTopicsAcrossClasses,
+    getTopicPerformanceTimeline,
+    cacheAnalyticsResult,
+    getCachedAnalytics,
+    invalidateAnalyticsCache,
+    getAnalyticsCacheStats,
+    exportAnalyticsData,
+    generateAnalyticsReport,
+    getAnalyticsDataForCSV,
+    anonymizeAnalyticsData,
+    subscribeToActivityEvents,
+    getRecentActivitySummary,
+    getCurrentPerformanceSnapshot,
+    getActiveStudentsCount,
+    getDB,
+    getAsync,
+    initDB,
+    isLiteMode,
+    toggleLiteMode,
     init,
     store,
     get,
     queue,
     flushQueue,
     fetchWithQueue,
-    toggleLiteMode,
-    isLiteMode,
     updateStatusIndicator,
     // Auth/session
     storeUser,
@@ -313,9 +640,30 @@ const Offline = (() => {
     aggregatePerformanceData,
     bulkStore,
     bulkGet,
-    anonymize
+    anonymize,
+    // Assignment system
+    storeAssignment,
+    getAssignmentsByTeacher,
+    getAssignmentsByStudent,
+    updateAssignmentStatus,
+    deleteAssignment,
+    storeSubmission,
+    getSubmissionsByAssignment,
+    getSubmissionsByStudent,
+    updateSubmissionGrade,
+    storeAssignmentFile,
+    getAssignmentFile,
+    storeAssignmentAnalytics,
+    queueAssignmentOp,
+    storeAssignmentNotification,
+    getAssignmentNotifications,
+    migrateToV7,
+    cleanupExpiredAssignments,
+    exportAssignmentData
   };
+}
 })();
 
 // Expose globally for legacy usage
 try { window.Offline = Offline; } catch (_) {}
+export default Offline;

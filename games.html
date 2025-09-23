@@ -12,7 +12,8 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="stylesheet" href="/css/games.css">
+    <link rel="stylesheet" href="/learning/gamified6-12/css/main.css">
+    <link rel="stylesheet" href="/learning/gamified6-12/css/games.css">
 </head>
 <body class="bg-gray-50" data-page="games" data-lite-support>
     <!-- Header -->
@@ -91,6 +92,9 @@
         <div class="mb-8">
             <h2 class="text-xl font-semibold mb-4" data-i18n="games.title">Categories</h2>
             <div class="flex flex-wrap gap-3" id="game-categories">
+                <button class="px-4 py-2 bg-indigo-300 text-black rounded-full text-sm font-medium" data-category="technology" data-i18n="games.cat.technology">Technology</button>
+                <button class="px-4 py-2 bg-orange-300 text-black rounded-full text-sm font-medium" data-category="engineering" data-i18n="games.cat.engineering">Engineering</button>
+                <button class="px-4 py-2 bg-yellow-300 text-black rounded-full text-sm font-medium" data-category="quiz" data-i18n="games.cat.quiz">Quiz</button>
                 <button class="px-4 py-2 bg-blue-600 text-white rounded-full text-sm font-medium" data-category="all" data-i18n="games.cat.all">All Games</button>
                 <button class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full text-sm font-medium" data-category="math" data-i18n="games.cat.math">Mathematics</button>
                 <button class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full text-sm font-medium" data-category="physics" data-i18n="games.cat.sci">Physics</button>
@@ -100,6 +104,154 @@
 
         <!-- Featured Games Grid -->
         <div class="game-grid" id="featured-games">
+            <!-- Technology Games -->
+            <div class="game-card" data-category="technology">
+                <div class="game-icon animated-icon" style="background:linear-gradient(135deg,#6366f1,#a5b4fc);border-radius:50%;"><i data-feather="code" class="w-12 h-12"></i></div>
+                <div class="game-title">Code Quest</div>
+                <div class="game-desc">Solve programming puzzles with drag-and-drop code blocks.</div>
+                <div class="game-meta"><span class="difficulty-stars">★★★</span> Intermediate</div>
+                <button class="game-play-btn" data-game="codeQuest">Play</button>
+            </div>
+            <div class="game-card" data-category="technology">
+                <div class="game-icon animated-icon" style="background:linear-gradient(135deg,#f59e42,#fbbf24);border-radius:50%;"><i data-feather="cpu" class="w-12 h-12"></i></div>
+                <div class="game-title">Circuit Builder</div>
+                <div class="game-desc">Build and analyze electronic circuits interactively.</div>
+                <div class="game-meta"><span class="difficulty-stars">★★</span> Beginner</div>
+                <button class="game-play-btn" data-game="circuitBuilder">Play</button>
+            </div>
+            <div class="game-card" data-category="technology">
+                <div class="game-icon animated-icon" style="background:linear-gradient(135deg,#10b981,#34d399);border-radius:50%;"><i data-feather="activity" class="w-12 h-12"></i></div>
+                <div class="game-title">AI Trainer</div>
+                <div class="game-desc">Train neural networks and solve machine learning challenges.</div>
+                <div class="game-meta"><span class="difficulty-stars">★★★★</span> Advanced</div>
+                <button class="game-play-btn" data-game="aiTrainer">Play</button>
+            </div>
+            <div class="game-card" data-category="technology">
+                <div class="game-icon animated-icon" style="background:linear-gradient(135deg,#f43f5e,#fbbf24);border-radius:50%;"><i data-feather="shield" class="w-12 h-12"></i></div>
+                <div class="game-title">Cyber Security Challenge</div>
+                <div class="game-desc">Test your skills in encryption, password cracking, and network defense.</div>
+                <div class="game-meta"><span class="difficulty-stars">★★★</span> Intermediate</div>
+                <button class="game-play-btn" data-game="cyberSecurity">Play</button>
+            </div>
+            <!-- Technology Quiz Card (already exists) -->
+            <!-- Engineering Games -->
+            <div class="game-card" data-category="engineering">
+                <div class="game-icon animated-icon" style="background:linear-gradient(135deg,#f59e42,#fbbf24);border-radius:50%;"><i data-feather="settings" class="w-12 h-12"></i></div>
+                <div class="game-title">Bridge Builder</div>
+                <div class="game-desc">Design and test bridges with realistic physics simulation.</div>
+                <div class="game-meta"><span class="difficulty-stars">★★★</span> Intermediate</div>
+                <button class="game-play-btn" data-game="bridgeBuilder">Play</button>
+            </div>
+            <div class="game-card" data-category="engineering">
+                <div class="game-icon animated-icon" style="background:linear-gradient(135deg,#f43f5e,#fbbf24);border-radius:50%;"><i data-feather="cpu" class="w-12 h-12"></i></div>
+                <div class="game-title">Robot Designer</div>
+                <div class="game-desc">Assemble and program robots for mechanical challenges.</div>
+                <div class="game-meta"><span class="difficulty-stars">★★</span> Beginner</div>
+                <button class="game-play-btn" data-game="robotDesigner">Play</button>
+            </div>
+            <div class="game-card" data-category="engineering">
+                <div class="game-icon animated-icon" style="background:linear-gradient(135deg,#10b981,#34d399);border-radius:50%;"><i data-feather="zap" class="w-12 h-12"></i></div>
+                <div class="game-title">Energy Optimizer</div>
+                <div class="game-desc">Design efficient power systems and optimize energy flow.</div>
+                <div class="game-meta"><span class="difficulty-stars">★★★★</span> Advanced</div>
+                <button class="game-play-btn" data-game="energyOptimizer">Play</button>
+            </div>
+            <div class="game-card" data-category="engineering">
+                <div class="game-icon animated-icon" style="background:linear-gradient(135deg,#6366f1,#a5b4fc);border-radius:50%;"><i data-feather="layers" class="w-12 h-12"></i></div>
+                <div class="game-title">Material Tester</div>
+                <div class="game-desc">Test and compare materials for strength, durability, and performance.</div>
+                <div class="game-meta"><span class="difficulty-stars">★★</span> Beginner</div>
+                <button class="game-play-btn" data-game="materialTester">Play</button>
+            </div>
+            <!-- Engineering Quiz Card -->
+            <div class="game-card" data-category="engineering">
+                <div class="game-icon animated-icon" style="background:linear-gradient(135deg,#fbbf24,#fde68a);border-radius:50%;"><i data-feather="star" class="w-12 h-12"></i></div>
+                <div class="game-title">Engineering Quiz Master</div>
+                <div class="game-desc">Test your engineering knowledge and problem-solving skills.</div>
+                <div class="game-meta">10 Questions</div>
+                <button class="game-play-btn" data-game="engineeringQuiz">Start Quiz</button>
+            </div>
+        /* Enhanced Game Card Animations */
+        .game-card {
+            transition: transform 0.3s cubic-bezier(.25,.8,.25,1), box-shadow 0.3s;
+            box-shadow: 0 2px 8px #0002;
+            cursor: pointer;
+        }
+        .game-card:hover {
+            transform: scale(1.05) rotate(-2deg);
+            box-shadow: 0 8px 32px #0004;
+            z-index: 2;
+        }
+        .animated-icon {
+            animation: floatIcon 2s infinite ease-in-out;
+        }
+        @keyframes floatIcon {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-8px) scale(1.1); }
+            100% { transform: translateY(0); }
+        }
+        .difficulty-stars {
+            color: #fbbf24;
+            font-size: 1.1em;
+            margin-right: 4px;
+        }
+        /* Card flip effect */
+        .game-card .game-desc {
+            transition: opacity 0.3s;
+        }
+        .game-card:hover .game-desc {
+            opacity: 1;
+        }
+        /* Responsive grid */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+        }
+            <!-- Quiz Cards -->
+            <div class="game-card" data-category="quiz">
+                <div class="game-icon" style="background:linear-gradient(135deg,#fbbf24,#fde68a);border-radius:50%;"><i data-feather="help-circle" class="w-12 h-12"></i></div>
+                <div class="game-title">Mixed STEM Quiz</div>
+                <div class="game-desc">Test your skills across Math, Physics, Chemistry, Biology, and Technology.</div>
+                <div class="game-meta">12 Questions</div>
+                <button class="game-play-btn" data-game="mixedQuiz">Start Quiz</button>
+            </div>
+            <div class="game-card" data-category="quiz">
+                <div class="game-icon" style="background:linear-gradient(135deg,#16a34a,#4ade80);border-radius:50%;"><i data-feather="bar-chart-2" class="w-12 h-12"></i></div>
+                <div class="game-title">Math Quiz Challenge</div>
+                <div class="game-desc">Sharpen your math skills with fun quizzes.</div>
+                <div class="game-meta">10 Questions</div>
+                <button class="game-play-btn" data-game="mathQuiz">Start Quiz</button>
+            </div>
+            <div class="game-card" data-category="quiz">
+                <div class="game-icon" style="background:linear-gradient(135deg,#3b82f6,#60a5fa);border-radius:50%;"><i data-feather="activity" class="w-12 h-12"></i></div>
+                <div class="game-title">Physics Quiz Master</div>
+                <div class="game-desc">Challenge yourself with physics questions.</div>
+                <div class="game-meta">10 Questions</div>
+                <button class="game-play-btn" data-game="physicsQuiz">Start Quiz</button>
+            </div>
+            <div class="game-card" data-category="quiz">
+                <div class="game-icon" style="background:linear-gradient(135deg,#a21caf,#c084fc);border-radius:50%;"><i data-feather="flask" class="w-12 h-12"></i></div>
+                <div class="game-title">Chemistry Quiz Lab</div>
+                <div class="game-desc">Test your chemistry knowledge.</div>
+                <div class="game-meta">10 Questions</div>
+                <button class="game-play-btn" data-game="chemistryQuiz">Start Quiz</button>
+            </div>
+            <div class="game-card" data-category="quiz">
+                <div class="game-icon" style="background:linear-gradient(135deg,#8b5cf6,#a78bfa);border-radius:50%;"><i data-feather="cpu" class="w-12 h-12"></i></div>
+                <div class="game-title">Technology Quiz Genius</div>
+                <div class="game-desc">Explore technology concepts in quiz form.</div>
+                <div class="game-meta">10 Questions</div>
+                <button class="game-play-btn" data-game="techQuiz">Start Quiz</button>
+            </div>
+            <!-- Daily Challenge Quiz Card -->
+            <div class="game-card" data-category="quiz">
+                <div class="game-icon" style="background:linear-gradient(135deg,#f59e42,#fbbf24);border-radius:50%;"><i data-feather="star" class="w-12 h-12"></i></div>
+                <div class="game-title">Daily Challenge Quiz</div>
+                <div class="game-desc">Today's featured quiz challenge. Earn bonus rewards!</div>
+                <div class="game-meta">Special</div>
+                <button class="game-play-btn" data-game="dailyQuiz">Start Quiz</button>
+            </div>
             <!-- Physics -->
             <div class="game-card" data-category="physics">
                 <div class="game-icon" style="background:linear-gradient(135deg,#3b82f6,#60a5fa);border-radius:50%;"><i data-feather="activity" class="w-12 h-12"></i></div>
@@ -151,9 +303,22 @@
         <div id="game-modal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.7);z-index:50;align-items:center;justify-content:center;">
             <div style="background:#fff;border-radius:1rem;max-width:600px;width:90vw;padding:2rem;position:relative;box-shadow:0 4px 32px #0004;">
                 <button id="close-game" style="position:absolute;top:1rem;right:1rem;" class="game-play-btn">✕</button>
+                <div id="quiz-modal-content" style="display:none;">
+                    <div id="quiz-question" class="mb-4 font-bold text-lg"></div>
+                    <div id="quiz-options" class="mb-4"></div>
+                    <div id="quiz-progress" class="mb-2 text-sm"></div>
+                    <div id="quiz-timer" class="mb-2 text-sm"></div>
+                    <button id="quiz-submit" class="game-play-btn bg-blue-600 text-white">Submit Answer</button>
+                </div>
                 <canvas id="game-canvas" style="width:100%;height:320px;max-width:100%;border-radius:1rem;background:#f3f4f6;"></canvas>
                 <div class="flex gap-2 mt-4">
                     <button id="pause-game" class="game-play-btn" data-i18n="game.pause">Pause</button>
+                </div>
+                <div id="quiz-result" style="display:none;" class="mt-4">
+                    <div id="quiz-score" class="font-bold text-xl mb-2"></div>
+                    <div id="quiz-explanations" class="mb-2"></div>
+                    <div id="quiz-rewards" class="mb-2"></div>
+                    <button id="quiz-close" class="game-play-btn bg-green-600 text-white">Close</button>
                 </div>
             </div>
         </div>
@@ -163,15 +328,102 @@
         <script src="/learning/gamified6-12/js/game-engine.js"></script>
         <script src="/learning/gamified6-12/js/game-progression.js"></script>
         <script src="/learning/gamified6-12/js/low-poly-renderer.js"></script>
-    <script src="/learning/gamified6-12/js/gamification-manager.js"></script>
-    <script src="/learning/gamified6-12/js/village-game.js"></script>
-    <script src="/learning/gamified6-12/js/leaderboard-system.js"></script>
-    <script src="/learning/gamified6-12/js/daily-challenge-system.js"></script>
-    <script src="/learning/gamified6-12/js/games/physics-puzzles.js"></script>
-    <script src="/learning/gamified6-12/js/games/math-escape-rooms.js"></script>
-    <script src="/learning/gamified6-12/js/games/chemistry-simulations.js"></script>
-    <link rel="stylesheet" href="/learning/gamified6-12/css/gamification.css">
+        <script src="/learning/gamified6-12/js/gamification-manager.js"></script>
+        <script src="/learning/gamified6-12/js/village-game.js"></script>
+        <script src="/learning/gamified6-12/js/leaderboard-system.js"></script>
+        <script src="/learning/gamified6-12/js/daily-challenge-system.js"></script>
+        <script src="/learning/gamified6-12/js/technology-challenges.js"></script>
+        <script src="/learning/gamified6-12/js/engineering-simulations.js"></script>
+        <script src="/learning/gamified6-12/js/games/physics-puzzles.js"></script>
+        <script src="/learning/gamified6-12/js/games/math-escape-rooms.js"></script>
+        <script src="/learning/gamified6-12/js/games/chemistry-simulations.js"></script>
+        <link rel="stylesheet" href="/learning/gamified6-12/css/gamification.css">
         <script>
+        // --- Quiz Integration ---
+        function launchQuiz(type) {
+            let challenge;
+            if (type === 'mixedQuiz') {
+                challenge = DailyChallengeSystemInstance.generateQuizChallenge({ subjects: ['math','physics','chemistry','biology','technology'], difficulty: 'beginner', count: 12 });
+            } else if (type === 'mathQuiz') {
+                challenge = DailyChallengeSystemInstance.generateQuizChallenge({ subjects: ['math'], difficulty: 'beginner', count: 10 });
+            } else if (type === 'physicsQuiz') {
+                challenge = DailyChallengeSystemInstance.generateQuizChallenge({ subjects: ['physics'], difficulty: 'beginner', count: 10 });
+            } else if (type === 'chemistryQuiz') {
+                challenge = DailyChallengeSystemInstance.generateQuizChallenge({ subjects: ['chemistry'], difficulty: 'beginner', count: 10 });
+            } else if (type === 'techQuiz') {
+                challenge = DailyChallengeSystemInstance.generateQuizChallenge({ subjects: ['technology'], difficulty: 'beginner', count: 10 });
+            } else if (type === 'dailyQuiz') {
+                challenge = DailyChallengeSystemInstance.generateQuizChallenge({ subjects: ['math','physics','chemistry','biology','technology'], difficulty: 'intermediate', count: 15 });
+            }
+            if (!challenge) return;
+            DailyChallengeSystemInstance.startQuizSession(challenge.id);
+            showQuizModal(challenge);
+        }
+
+        function showQuizModal(challenge) {
+            document.getElementById('game-modal').style.display = 'flex';
+            document.getElementById('quiz-modal-content').style.display = 'block';
+            document.getElementById('game-canvas').style.display = 'none';
+            let current = 0;
+            let explanations = [];
+            function renderQuestion() {
+                const q = challenge.questions[current];
+                document.getElementById('quiz-question').textContent = q.q;
+                let optionsHtml = '';
+                if (q.type === 'mcq') {
+                    q.options.forEach(opt => {
+                        optionsHtml += `<label><input type="radio" name="quiz-opt" value="${opt}"> ${opt}</label><br>`;
+                    });
+                } else if (q.type === 'tf') {
+                    optionsHtml = `<label><input type="radio" name="quiz-opt" value="true"> True</label> <label><input type="radio" name="quiz-opt" value="false"> False</label>`;
+                } else if (q.type === 'fill') {
+                    optionsHtml = `<input type="text" name="quiz-opt" class="border rounded px-2">`;
+                }
+                document.getElementById('quiz-options').innerHTML = optionsHtml;
+                document.getElementById('quiz-progress').textContent = `Question ${current+1} of ${challenge.questions.length}`;
+            }
+            renderQuestion();
+            document.getElementById('quiz-submit').onclick = function() {
+                let answer;
+                if (challenge.questions[current].type === 'mcq' || challenge.questions[current].type === 'tf') {
+                    answer = document.querySelector('input[name="quiz-opt"]:checked')?.value;
+                    if (answer === 'true') answer = true;
+                    if (answer === 'false') answer = false;
+                } else if (challenge.questions[current].type === 'fill') {
+                    answer = document.querySelector('input[name="quiz-opt"]')?.value;
+                }
+                const result = DailyChallengeSystemInstance.submitQuizAnswer(challenge.id, challenge.questions[current].id, answer);
+                explanations.push(result.explanation);
+                current++;
+                if (current < challenge.questions.length) {
+                    renderQuestion();
+                } else {
+                    // Quiz complete
+                    DailyChallengeSystemInstance.completeQuizSession(challenge.id);
+                    // Award subject-specific quiz rewards
+                    if (window.GamificationManager) {
+                        GamificationManager.awardQuizRewards?.(challenge.session.score, challenge.subjects || [], challenge.difficulty || 'beginner');
+                        GamificationManager.updateCoinCounter('coin-count');
+                        GamificationManager.updateStreakWidget('streak-count');
+                        GamificationManager.updateBadgeWidget('badge-count');
+                        GamificationManager.updateAchievements('achievement-list');
+                    }
+                    document.getElementById('quiz-modal-content').style.display = 'none';
+                    document.getElementById('quiz-result').style.display = 'block';
+                    document.getElementById('quiz-score').textContent = `Score: ${challenge.session.score} / ${challenge.questions.length}`;
+                    document.getElementById('quiz-explanations').innerHTML = explanations.map((ex, i) => `<div>Q${i+1}: ${ex}</div>`).join('');
+                    document.getElementById('quiz-rewards').textContent = 'Rewards: ' + (window.GamificationManager ? GamificationManager.getBadges() + ' Badges, ' + GamificationManager.getCoins() + ' Coins' : 'N/A');
+                }
+            };
+            document.getElementById('quiz-close').onclick = function() {
+                document.getElementById('game-modal').style.display = 'none';
+                document.getElementById('quiz-result').style.display = 'none';
+                document.getElementById('game-canvas').style.display = 'block';
+            };
+        }
+
+        // DailyChallengeSystem instance
+        window.DailyChallengeSystemInstance = new DailyChallengeSystem();
         document.addEventListener('DOMContentLoaded', function() {
             i18n.init();
             if (window.Offline) Offline.init();
@@ -190,7 +442,7 @@
             document.getElementById('lite-toggle').onclick = function() {
                 Offline.toggleLiteMode();
             };
-            // Category filter
+            // Category filter (single implementation)
             document.getElementById('game-categories').addEventListener('click', function(e) {
                 if (e.target.matches('button[data-category]')) {
                     let cat = e.target.getAttribute('data-category');
@@ -199,7 +451,7 @@
                     });
                 }
             });
-            // Search filter
+            // Search filter (single implementation)
             document.getElementById('game-search').addEventListener('input', function(e) {
                 let val = e.target.value.toLowerCase();
                 document.querySelectorAll('.game-card').forEach(card => {
@@ -208,26 +460,48 @@
                     card.style.display = (title.includes(val) || desc.includes(val)) ? '' : 'none';
                 });
             });
-            // Game launcher
+            // Unified game/quiz launcher
             document.querySelectorAll('.game-play-btn[data-game]').forEach(btn => {
                 btn.onclick = function() {
                     let game = btn.getAttribute('data-game');
                     document.getElementById('game-modal').style.display = 'flex';
-                    // Launch correct game stub
                     let canvasId = 'game-canvas';
-                    let reward = 0;
-                    if (game === 'gravityMaster') { PhysicsPuzzles.GravityMaster.play(canvasId); reward = 10; }
-                    if (game === 'collisionCourse') { PhysicsPuzzles.CollisionCourse.play(canvasId); reward = 15; }
-                    if (game === 'numberMaze') { MathEscapeRooms.NumberMaze.play(canvasId); reward = 8; }
-                    if (game === 'algebraAdventure') { MathEscapeRooms.AlgebraAdventure.play(canvasId); reward = 12; }
-                    if (game === 'moleculeBuilder') { ChemistrySimulations.MoleculeBuilder.play(canvasId); reward = 10; }
-                    if (game === 'reactionLab') { ChemistrySimulations.ReactionLab.play(canvasId); reward = 20; }
-                    // Gamification: award coins, update streak, check badges, update leaderboard
-                    GamificationManager.awardCoins(reward);
-                    GamificationManager.updateStreak();
-                    GamificationManager.checkBadges(game);
-                    LeaderboardSystem.updateLeaderboard();
-                    GamificationManager.updateAchievements('achievement-list');
+                    // Quiz launch
+                    if (game && game.endsWith('Quiz')) {
+                        launchQuiz(game);
+                        return;
+                    }
+                    // Game launch logic
+                    let subject = '';
+                    let score = 10; // placeholder for reward/score
+                    let difficulty = 'intermediate';
+                    // Technology games
+                    if (game === 'codeQuest') { if (window.TechnologyChallenges) TechnologyChallenges.codeQuest.play(canvasId); subject = 'technology'; }
+                    if (game === 'circuitBuilder') { if (window.TechnologyChallenges) TechnologyChallenges.circuitBuilder.play(canvasId); subject = 'technology'; }
+                    if (game === 'aiTrainer') { if (window.TechnologyChallenges) TechnologyChallenges.aiTrainer.play(canvasId); subject = 'technology'; }
+                    if (game === 'cyberSecurity') { if (window.TechnologyChallenges) TechnologyChallenges.cyberSecurity.play(canvasId); subject = 'technology'; }
+                    // Engineering games
+                    if (game === 'bridgeBuilder') { if (window.EngineeringSimulations) EngineeringSimulations.bridgeBuilder.play(canvasId); subject = 'engineering'; }
+                    if (game === 'robotDesigner') { if (window.EngineeringSimulations) EngineeringSimulations.robotDesigner.play(canvasId); subject = 'engineering'; }
+                    if (game === 'energyOptimizer') { if (window.EngineeringSimulations) EngineeringSimulations.energyOptimizer.play(canvasId); subject = 'engineering'; }
+                    if (game === 'materialTester') { if (window.EngineeringSimulations) EngineeringSimulations.materialTester.play(canvasId); subject = 'engineering'; }
+                    // Physics games
+                    if (game === 'gravityMaster') { if (window.PhysicsPuzzles) PhysicsPuzzles.gravityMaster.play(canvasId); subject = 'physics'; }
+                    if (game === 'collisionCourse') { if (window.PhysicsPuzzles) PhysicsPuzzles.collisionCourse.play(canvasId); subject = 'physics'; }
+                    // Math games
+                    if (game === 'numberMaze') { if (window.MathEscapeRooms) MathEscapeRooms.numberMaze.play(canvasId); subject = 'math'; }
+                    if (game === 'algebraAdventure') { if (window.MathEscapeRooms) MathEscapeRooms.algebraAdventure.play(canvasId); subject = 'math'; }
+                    // Chemistry games
+                    if (game === 'moleculeBuilder') { if (window.ChemistrySimulations) ChemistrySimulations.moleculeBuilder.play(canvasId); subject = 'chemistry'; }
+                    if (game === 'reactionLab') { if (window.ChemistrySimulations) ChemistrySimulations.reactionLab.play(canvasId); subject = 'chemistry'; }
+                    // Gamification: award game rewards
+                    if (subject) {
+                        GamificationManager.awardGameRewards(subject, score, difficulty, 0);
+                        GamificationManager.updateCoinCounter('coin-count');
+                        GamificationManager.updateStreakWidget('streak-count');
+                        GamificationManager.updateBadgeWidget('badge-count');
+                        GamificationManager.updateAchievements('achievement-list');
+                    }
                 };
             });
             // Modal close

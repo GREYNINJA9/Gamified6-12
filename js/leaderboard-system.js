@@ -1,5 +1,35 @@
 // Leaderboard System
 class LeaderboardSystem {
+  // --- Quiz Leaderboard Categories ---
+  updateQuizRank(userId, subject, score) {
+    this.rankings.push({ userId, subject, score });
+    this.rankings.sort((a, b) => b.score - a.score);
+    this.save();
+  }
+
+  getQuizLeaderboard(subject, timeframe = 'week') {
+    return this.rankings.filter(r => r.subject === subject).slice(0, 10);
+  }
+
+  getDailyQuizChampions() {
+    // Stub: Return top daily quiz scorers
+    return this.rankings.filter(r => r.subject && r.subject.includes('quiz')).slice(0, 3);
+  }
+
+  getQuizStreakLeaders() {
+    // Stub: Return streak leaders
+    return this.rankings.slice(0, 5);
+  }
+
+  startQuizCompetition(type, duration) {
+    // Stub: Start competition
+    this.competition = { type, duration, started: Date.now() };
+  }
+
+  getQuizLeaderboardTrends(timeframe = 'month') {
+    // Stub: Return trends
+    return { timeframe, trend: 'upward' };
+  }
   constructor() {
     this.rankings = [];
     this.load();

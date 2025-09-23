@@ -1,8 +1,88 @@
+  // Safe localStorage helpers
+  function safeGetItem(key) {
+    try { return localStorage.getItem(key); } catch (e) { return null; }
+  }
+  function safeSetItem(key, value) {
+    try { localStorage.setItem(key, value); } catch (e) {}
+  }
 // STEM Village i18n core
 const i18n = (() => {
   // Dictionaries: Add all static text keys for all pages here
   const dict = {
   en: {
+  // Avatar Creator
+  'avatar.title': 'Create Your Avatar',
+  'avatar.appearance.skin': 'Skin Tone',
+  'avatar.appearance.hair': 'Hair Style',
+  'avatar.appearance.hairColor': 'Hair Color',
+  'avatar.appearance.face': 'Facial Features',
+  'avatar.appearance.body': 'Body Type',
+  'avatar.cultural.saree': 'Saree',
+  'avatar.cultural.kurta': 'Kurta',
+  'avatar.cultural.dhoti': 'Dhoti',
+  'avatar.cultural.tilaka': 'Tilaka',
+  'avatar.cultural.jewelry': 'Jewelry',
+  'avatar.cultural.odiaDress': 'Odia Traditional Dress',
+  'avatar.cultural.context': 'Traditional Indian clothing and accessories.',
+  'avatar.stem.labCoat': 'Lab Coat',
+  'avatar.stem.goggles': 'Safety Goggles',
+  'avatar.stem.calculator': 'Calculator',
+  'avatar.stem.microscope': 'Microscope',
+  'avatar.stem.laptop': 'Laptop',
+  'avatar.stem.engineeringTools': 'Engineering Tools',
+  'avatar.stem.scienceKit': 'Science Kit',
+  'avatar.stem.context': 'STEM-themed accessories and equipment.',
+  'avatar.achievements.styleMaster': 'Style Master',
+  'avatar.achievements.culturalExplorer': 'Cultural Explorer',
+  'avatar.achievements.stemFashionista': 'STEM Fashionista',
+  'avatar.unlocks.labCoat': 'Unlock by earning the Physics Master badge.',
+  'avatar.unlocks.microscope': 'Unlock by earning 100 coins.',
+  'avatar.unlocks.odiaDress': 'Unlock by completing Odia culture challenge.',
+  'avatar.actions.save': 'Save Avatar',
+  'avatar.actions.export': 'Export Avatar',
+  'avatar.actions.reset': 'Reset',
+  'avatar.actions.randomize': 'Randomize',
+  'avatar.accessibility.instructions': 'Use tab to navigate avatar options. All controls are accessible.',
+  'avatar.accessibility.colorBlind': 'Color-blind friendly options available.',
+  'avatar.tooltip.labCoat': 'Lab coats are worn by scientists and engineers for safety.',
+  'avatar.tooltip.tilaka': 'Tilaka is a traditional mark worn on the forehead in India.',
+  'avatar.tooltip.microscope': 'Microscopes are used to observe tiny objects in science.',
+  'avatar.tooltip.odiaDress': 'Odia dress represents the culture of Odisha.',
+  'avatar.tooltip.jewelry': 'Jewelry is an important part of Indian tradition.',
+  'avatar.tooltip.engineeringTools': 'Engineering tools symbolize innovation and creativity.',
+  'avatar.tooltip.scienceKit': 'Science kits help students learn through experiments.',
+  'avatar.tooltip.saree': 'Saree is a traditional Indian garment for women.',
+  'avatar.tooltip.kurta': 'Kurta is a traditional Indian garment for men.',
+  'avatar.tooltip.dhoti': 'Dhoti is a traditional Indian garment for men.',
+  'avatar.tooltip.goggles': 'Safety goggles protect your eyes during experiments.',
+  'avatar.tooltip.calculator': 'Calculators are essential for math and science.',
+  'avatar.tooltip.laptop': 'Laptops are used for coding and research.',
+  'avatar.unlocks.context': 'Unlock avatar items by earning coins, badges, or completing challenges.',
+  'avatar.notification.unlocked': 'New avatar item unlocked!',
+  'avatar.notification.achievement': 'Avatar achievement earned!',
+  'avatar.notification.saved': 'Avatar saved successfully!',
+  'avatar.notification.exported': 'Avatar exported!',
+  'avatar.notification.reset': 'Avatar reset.',
+  'avatar.notification.randomized': 'Avatar randomized.',
+  'avatar.notification.error': 'Error saving avatar.',
+  'avatar.notification.gifted': 'Avatar item gifted to peer!',
+  'avatar.notification.backup': 'Avatar backup created.',
+  'avatar.notification.restore': 'Avatar restored from backup.',
+  'avatar.actions.gift': 'Gift Item',
+  'avatar.actions.backup': 'Backup Avatar',
+  'avatar.actions.restore': 'Restore Avatar',
+  'avatar.progress.unlocks': 'Unlock Progress',
+  'avatar.progress.achievements': 'Avatar Achievements',
+  'avatar.progress.coins': 'Coins Required',
+  'avatar.progress.badges': 'Badges Required',
+  'avatar.progress.challenges': 'Challenges Required',
+  'avatar.tab.appearance': 'Appearance',
+  'avatar.tab.cultural': 'Cultural',
+  'avatar.tab.stem': 'STEM',
+  'avatar.tab.accessories': 'Accessories',
+  'avatar.tab.achievements': 'Achievements',
+  'avatar.tab.unlocks': 'Unlocks',
+  'avatar.tab.actions': 'Actions',
   // Teacher Analytics
   'analytics.dashboard': 'Analytics Dashboard',
   'analytics.metrics': 'Performance Metrics',
@@ -600,6 +680,7 @@ const i18n = (() => {
   };
 
   let currentLang = 'en';
+  let userId = null;
 
   function getDict(key) {
     const d = dict[currentLang];
@@ -608,9 +689,28 @@ const i18n = (() => {
     return val;
   }
 
+  function getUserLangKey() {
+    // Try Auth, fallback to Offline, then localStorage
+    let id = null;
+    if (window.Auth && typeof window.Auth.getCurrentUser === 'function') {
+      try {
+        const user = window.Auth.getCurrentUser();
+        if (user && user.email) id = user.email;
+      } catch (e) {}
+    }
+    if (!id && window.Offline && typeof window.Offline.getCurrentUser === 'function') {
+      try {
+        const user = window.Offline.getCurrentUser();
+        if (user && user.email) id = user.email;
+      } catch (e) {}
+    }
+    if (!id) id = localStorage.getItem('sv_current_user');
+    return id ? `sv_lang_${id}` : 'sv_lang';
+  }
+
   function setLang(lang) {
     currentLang = lang;
-    localStorage.setItem('sv_lang', lang);
+    safeSetItem(getUserLangKey(), lang);
     document.documentElement.lang = lang;
     translateDOM();
     updateToggleUI();
@@ -619,30 +719,39 @@ const i18n = (() => {
   function updateToggleUI() {
     const toggle = document.getElementById('lang-toggle');
     if (!toggle) return;
-    Array.from(toggle.querySelectorAll('button[data-lang]')).forEach(btn => {
-      btn.classList.toggle('active', btn.getAttribute('data-lang') === currentLang);
-    });
+    const langNames = { en: 'English', hi: 'हिंदी', or: 'ଓଡିଆ' };
+    const nextLang = cycleLang(currentLang);
+    toggle.innerHTML = `<button id="cycle-lang-btn" class="px-2 py-1 rounded bg-gray-200 text-xs flex items-center gap-1" aria-label="Change Language (${langNames[nextLang]})" tabindex="0">
+      <span>${langNames[currentLang]}</span>
+      <span class="mx-1">→</span>
+      <span class="font-semibold">${langNames[nextLang]}</span>
+    </button>`;
+    const btn = document.getElementById('cycle-lang-btn');
+    if (btn) {
+      btn.onclick = () => setLang(nextLang);
+      btn.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { setLang(nextLang); } };
+      btn.setAttribute('aria-label', `Change Language (${langNames[nextLang]})`);
+    }
+  }
+
+  function cycleLang(lang) {
+    if (lang === 'en') return 'hi';
+    if (lang === 'hi') return 'or';
+    return 'en';
   }
 
   function createLanguageToggle() {
-    if (document.getElementById('lang-toggle')) return;
-    const toggle = document.createElement('div');
-    toggle.id = 'lang-toggle';
-    toggle.className = 'flex gap-2 items-center';
-    toggle.innerHTML = `
-      <button data-lang="en" class="px-2 py-1 rounded bg-gray-200 text-xs">EN</button>
-      <button data-lang="hi" class="px-2 py-1 rounded bg-gray-200 text-xs">हिंदी</button>
-      <button data-lang="or" class="px-2 py-1 rounded bg-gray-200 text-xs">ଓଡିଆ</button>
-    `;
-    toggle.addEventListener('click', e => {
-      if (e.target.matches('button[data-lang]')) {
-        setLang(e.target.getAttribute('data-lang'));
-      }
-    });
-    // Insert into header or before main
-    const header = document.querySelector('header');
-    if (header) header.appendChild(toggle);
-    else document.body.insertBefore(toggle, document.body.firstChild);
+    let toggle = document.getElementById('lang-toggle');
+    if (!toggle) {
+      toggle = document.createElement('div');
+      toggle.id = 'lang-toggle';
+      toggle.className = 'flex gap-2 items-center';
+      // Insert into header or before main
+      const header = document.querySelector('header');
+      if (header) header.appendChild(toggle);
+      else document.body.insertBefore(toggle, document.body.firstChild);
+    }
+    // Always populate and bind the toggle UI
     updateToggleUI();
   }
 
@@ -700,17 +809,13 @@ const i18n = (() => {
   }
 
   function init() {
-    currentLang = localStorage.getItem('sv_lang') || 'en';
+    let lang = safeGetItem(getUserLangKey()) || safeGetItem('sv_lang') || 'en';
+    currentLang = ['en','hi','or'].includes(lang) ? lang : 'en';
     document.documentElement.lang = currentLang;
     createLanguageToggle();
     translateDOM();
-    // Remove i18n-wait class for FOUC prevention
     document.documentElement.classList.remove('i18n-wait');
-    
-    // Re-translate after a short delay to ensure all elements are loaded
-    setTimeout(() => {
-      translateDOM();
-    }, 500);
+    setTimeout(() => { translateDOM(); }, 500);
   }
 
   return { init, setLang, translateDOM, speak, createLanguageToggle };

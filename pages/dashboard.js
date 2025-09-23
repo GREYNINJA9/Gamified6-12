@@ -83,7 +83,7 @@ export default function Dashboard() {
             </h2>
             <ul className="space-y-2">
               <li className="flex items-center p-2 bg-gray-50 rounded-lg">
-                <i data-feather="puzzle" className="w-4 h-4 mr-3 text-purple-500"></i>
+                <i data-feather="key" className="w-4 h-4 mr-3 text-purple-500"></i>
                 Math Escape Room
               </li>
               <li className="flex items-center p-2 bg-gray-50 rounded-lg">

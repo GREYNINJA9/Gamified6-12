@@ -9,8 +9,9 @@
   <link rel="stylesheet" href="css/accessibility.css">
   <script src="https://unpkg.com/feather-icons"></script>
 </head>
-<body class="min-h-screen flex flex-col justify-center items-center bg-purple-50">
-  <header class="w-full py-6 flex justify-center items-center bg-purple-600 text-white shadow">
+<body class="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-purple-50 via-pink-50 to-rose-50">
+  <header class="w-full py-6 flex justify-center items-center bg-gradient-to-r from-purple-600 via-fuchsia-600 to-pink-600 text-white shadow">
+    <img src="/static/logo.png" alt="Logo" class="h-10 w-auto mr-3" />
     <h1 class="text-3xl font-bold tracking-tight">STEM Village Registration</h1>
     <button id="voice-nav" aria-label="Voice Navigation" class="ml-4 p-2 rounded-full bg-purple-500 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-300">
       <i data-feather="mic"></i>
@@ -19,14 +20,14 @@
   <main class="flex-1 w-full flex flex-col items-center justify-center">
     <form id="register-form" class="container max-w-md w-full bg-white rounded-lg shadow-lg p-8 mt-8 relative z-10" autocomplete="off" aria-labelledby="form-title" novalidate>
       <h2 id="form-title" class="text-2xl font-semibold text-purple-700 mb-6 text-center">Create Your Account</h2>
-      <div class="mb-6 flex justify-center gap-6" role="radiogroup" aria-label="Select Role">
-        <label class="flex items-center cursor-pointer">
-          <input type="radio" name="role" value="student" checked class="form-radio text-purple-600" aria-checked="true">
-          <span class="ml-2 text-purple-700 font-medium">Student</span>
+      <div class="mb-6 flex justify-center gap-1 bg-purple-100 p-1 rounded-lg" role="radiogroup" aria-label="Select Role">
+        <label class="flex-1 text-center py-2 px-4 cursor-pointer rounded-md bg-white shadow">
+          <input type="radio" name="role" value="student" checked class="hidden" aria-checked="true">
+          <span class="text-purple-700 font-medium">Student</span>
         </label>
-        <label class="flex items-center cursor-pointer">
-          <input type="radio" name="role" value="teacher" class="form-radio text-purple-600" aria-checked="false">
-          <span class="ml-2 text-purple-700 font-medium">Teacher</span>
+        <label class="flex-1 text-center py-2 px-4 cursor-pointer rounded-md">
+          <input type="radio" name="role" value="teacher" class="hidden" aria-checked="false">
+          <span class="text-purple-700 font-medium">Teacher</span>
         </label>
       </div>
       <div class="mb-4">

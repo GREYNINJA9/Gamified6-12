@@ -47,6 +47,28 @@ class CSVExporter {
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
     }
+    
+        // --- Analytics Report Export ---
+        async exportAnalyticsReport(type = 'activity', filters = {}) {
+            if (!window.Offline) return;
+            if (type === 'activity') {
+                Offline.getAllActivityEvents(events => {
+                    this.downloadCSV('activity_events.csv', events);
+                });
+            } else if (type === 'weak_topics') {
+                Offline.getAllWeakTopics(topics => {
+                    this.downloadCSV('weak_topics.csv', topics);
+                });
+            } else if (type === 'performance') {
+                Offline.getAllStudentPerformance(perf => {
+                    this.downloadCSV('student_performance.csv', perf);
+                });
+            } else if (type === 'analytics_cache') {
+                Offline.getAllAnalyticsCache(cache => {
+                    this.downloadCSV('analytics_cache.csv', cache);
+                });
+            }
+        }
 }
 
 window.CSVExporter = new CSVExporter();

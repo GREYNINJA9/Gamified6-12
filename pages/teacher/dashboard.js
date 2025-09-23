@@ -87,7 +87,7 @@ export default function TeacherDashboard() {
                   <tr>
                     <td className="px-4 py-2">Student A</td>
                     <td className="px-4 py-2 flex items-center">
-                      <i data-feather="calculator" className="w-4 h-4 mr-2 text-blue-500"></i>
+                      <i data-feather="percent" className="w-4 h-4 mr-2 text-blue-500"></i>
                       Math
                     </td>
                     <td className="px-4 py-2">
@@ -97,7 +97,7 @@ export default function TeacherDashboard() {
                   <tr>
                     <td className="px-4 py-2">Student B</td>
                     <td className="px-4 py-2 flex items-center">
-                      <i data-feather="flask" className="w-4 h-4 mr-2 text-green-500"></i>
+                      <i data-feather="zap" className="w-4 h-4 mr-2 text-green-500"></i>
                       Science
                     </td>
                     <td className="px-4 py-2">

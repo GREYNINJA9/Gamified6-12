@@ -1,3 +1,52 @@
+<section id="student-management" class="mt-10">
+    <h2 class="text-xl font-bold mb-4">Add Students</h2>
+    <div class="grid md:grid-cols-2 gap-6">
+        <!-- Individual Entry -->
+        <form id="add-student-form" class="border rounded p-4 bg-white">
+            <h3 class="font-semibold mb-2">Individual Entry</h3>
+            <input id="stu-name" class="input" placeholder="Student Name" required>
+            <input id="stu-id" class="input mt-2" placeholder="Student ID" required>
+            <input id="stu-grade" class="input mt-2" placeholder="Grade/Class">
+            <input id="stu-email" class="input mt-2" placeholder="Email (optional)">
+            <div class="text-sm text-gray-600 mt-2">Password will be auto-generated.</div>
+            <button type="submit" class="btn-primary mt-3">Create</button>
+            <div id="add-student-result" class="text-sm mt-2"></div>
+        </form>
+
+        <!-- CSV Import -->
+        <div class="border rounded p-4 bg-white">
+            <h3 class="font-semibold mb-2">Bulk Import (CSV)</h3>
+            <input type="file" id="student-csv" accept=".csv" class="block">
+            <button id="process-csv" class="btn-secondary mt-3">Import</button>
+            <div id="csv-preview" class="mt-2 text-sm"></div>
+        </div>
+    </div>
+</section>
+<script>
+(() => {
+    const teacherId = localStorage.getItem('sv_current_user');
+    const nameInput = document.getElementById('stu-name');
+    const idInput = document.getElementById('stu-id');
+    const gradeInput = document.getElementById('stu-grade');
+    const emailInput = document.getElementById('stu-email');
+    const resultDiv = document.getElementById('add-student-result');
+    const csvPreview = document.getElementById('csv-preview');
+    document.getElementById('add-student-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const payload = { name: nameInput.value, studentId: idInput.value, grade: gradeInput.value, email: emailInput.value || null };
+        const res = await Auth.createStudentAccount(payload, teacherId);
+        resultDiv.textContent = res.success ? `Created. Username: ${res.credentials.username}, Password: ${res.credentials.password}` : res.error;
+    });
+    document.getElementById('process-csv').onclick = async () => {
+        const file = document.getElementById('student-csv').files[0];
+        if (!file) return;
+        const text = await file.text();
+        const rows = text.trim().split(/\r?\n/).slice(1).map(l => { const [name, studentId, grade, email] = l.split(','); return { name, studentId, grade, email }; });
+        const results = await Auth.bulkCreateStudents(rows, teacherId);
+        csvPreview.textContent = `${results.filter(r => r.success).length} created, ${results.filter(r => !r.success).length} failed`;
+    };
+})();
+</script>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,8 +63,16 @@
     <script src="/learning/gamified6-12/js/teacher-analytics.js"></script>
     <script src="/learning/gamified6-12/js/csv-exporter.js"></script>
     <script src="/learning/gamified6-12/js/adaptive-difficulty-tracker.js"></script>
+    <script src="/learning/gamified6-12/js/i18n.js"></script>
 </head>
 <body class="bg-gray-100">
+    <!-- Accessibility & Inclusivity Header -->
+    <header class="flex justify-between items-center px-4 py-2 bg-green-50">
+        <div id="lang-toggle" class="mr-4 flex items-center"></div>
+        <div class="flex gap-2 items-center">
+            <!-- Teacher analytics filters and controls go here -->
+        </div>
+    </header>
     <!-- Sidebar -->
     <div class="flex h-screen overflow-hidden">
         <div class="hidden md:flex md:flex-shrink-0">
@@ -61,8 +118,8 @@
                             <span class="ml-3">Settings</span>
                         </a>
                         <a href="/logout.html" class="flex items-center px-4 py-3 text-green-200 hover:text-white hover:bg-green-800 rounded-lg transition duration-300">
-                            <i data-feather="log-out" class="w-5 h-5"></i>
-                            <span class="ml-3">Logout</span>
+                            <i data-feather="log-out" class="w-5 h-5" aria-hidden="true"></i>
+                            <span class="ml-3" data-i18n="sidebar_logout" aria-label="Logout">Logout</span>
                         </a>
                     </div>
                 </div>
@@ -165,6 +222,44 @@
                             </table>
                         </div>
                     </div>
+                    <script>
+                    // Real-time activity event wiring for dashboard
+                    document.addEventListener('DOMContentLoaded', async function() {
+                        // Subscribe to activity events for live updates
+                        TeacherAnalytics.subscribeToActivityEvents(async (activity) => {
+                            if (activity === 'refresh') {
+                                // Refresh Recent Activity table
+                                const events = await Offline.bulkGet('activity_events');
+                                const tbody = document.getElementById('activity-table-body');
+                                tbody.innerHTML = events.slice(-20).reverse().map(ev => `
+                                    <tr>
+                                        <td>${ev.studentName || ev.studentId}</td>
+                                        <td>${ev.activityType || ev.type}</td>
+                                        <td>${ev.subject || ''}</td>
+                                        <td>${ev.score ?? ''}</td>
+                                        <td>${ev.timeSpent || ev.duration || ''}</td>
+                                        <td>${ev.difficulty || ''}</td>
+                                        <td><button class="text-blue-600 underline" onclick="TeacherAnalytics.showStudentReport('${ev.studentId}')">View</button></td>
+                                    </tr>
+                                `).join('');
+                            }
+                        });
+                        // Initial table fill
+                        const events = await Offline.bulkGet('activity_events');
+                        const tbody = document.getElementById('activity-table-body');
+                        tbody.innerHTML = events.slice(-20).reverse().map(ev => `
+                            <tr>
+                                <td>${ev.studentName || ev.studentId}</td>
+                                <td>${ev.activityType || ev.type}</td>
+                                <td>${ev.subject || ''}</td>
+                                <td>${ev.score ?? ''}</td>
+                                <td>${ev.timeSpent || ev.duration || ''}</td>
+                                <td>${ev.difficulty || ''}</td>
+                                <td><button class="text-blue-600 underline" onclick="TeacherAnalytics.showStudentReport('${ev.studentId}')">View</button></td>
+                            </tr>
+                        `).join('');
+                    });
+                    </script>
                     <!-- CSV Export Interface -->
                     <div class="export-controls mb-6">
                         <label><input type="checkbox" checked> <span data-i18n="analytics.studentProgress">Student Progress</span></label>
@@ -442,26 +537,208 @@
                     </div>
                 </div>
             </div>
+
+        <!-- Assignment Creation Section -->
+        <div class="mt-12 mb-8">
+            <div class="bg-white rounded-lg shadow p-6">
+                <button class="w-full text-left font-bold text-lg mb-4" onclick="document.getElementById('assignment-create-panel').classList.toggle('hidden')">
+                    <i data-feather="edit-3" class="mr-2"></i><span data-i18n="assignment.create.title">Create Assignment</span>
+                </button>
+                <div id="assignment-create-panel" class="hidden">
+                    <form id="assignment-create-form" class="space-y-4">
+                        <div>
+                            <label class="block font-medium mb-1" for="assignment-title" data-i18n="assignment.create.title">Assignment Title</label>
+                            <input type="text" id="assignment-title" name="title" required class="w-full border rounded px-3 py-2">
+                        </div>
+                        <div>
+                            <label class="block font-medium mb-1" for="assignment-desc" data-i18n="assignment.create.description">Description</label>
+                            <textarea id="assignment-desc" name="description" rows="3" class="w-full border rounded px-3 py-2"></textarea>
+                        </div>
+                        <div>
+                            <label class="block font-medium mb-1" for="assignment-subject" data-i18n="assignment.create.subject">Subject</label>
+                            <select id="assignment-subject" name="subject" class="w-full border rounded px-3 py-2">
+                                <option value="math">Mathematics</option>
+                                <option value="physics">Physics</option>
+                                <option value="chemistry">Chemistry</option>
+                                <option value="biology">Biology</option>
+                                <option value="technology">Technology</option>
+                                <option value="engineering">Engineering</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-medium mb-1" for="assignment-due" data-i18n="assignment.create.dueDate">Due Date</label>
+                            <input type="datetime-local" id="assignment-due" name="dueDate" class="w-full border rounded px-3 py-2">
+                        </div>
+                        <div>
+                            <label class="block font-medium mb-1" data-i18n="assignment.create.submissionMode">Submission Mode</label>
+                            <select id="assignment-mode" name="submissionMode" class="w-full border rounded px-3 py-2">
+                                <option value="online">Online (File Upload)</option>
+                                <option value="offline">Offline Submission</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-medium mb-1" data-i18n="assignment.create.type">Assignment Type</label>
+                            <select id="assignment-type" name="type" class="w-full border rounded px-3 py-2">
+                                <option value="individual">Individual</option>
+                                <option value="group">Group</option>
+                                <option value="project">Project</option>
+                                <option value="quiz">Quiz</option>
+                            </select>
+                        </div>
+                        <!-- Student Selection Panel -->
+                        <div class="mt-6">
+                            <button type="button" class="font-bold mb-2" onclick="document.getElementById('student-select-panel').classList.toggle('hidden')">
+                                <i data-feather="users" class="mr-2"></i><span data-i18n="assignment.create.students">Select Students</span>
+                            </button>
+                            <div id="student-select-panel" class="hidden border rounded p-4 bg-gray-50">
+                                <div class="flex gap-2 mb-2">
+                                    <button type="button" id="select-all-students" class="px-2 py-1 bg-blue-100 rounded">Select All</button>
+                                    <button type="button" id="select-none-students" class="px-2 py-1 bg-gray-200 rounded">Select None</button>
+                                    <select id="class-select" class="ml-4 px-2 py-1 border rounded">
+                                        <option value="">All Classes</option>
+                                        <option value="8A">Grade 8A</option>
+                                        <option value="8B">Grade 8B</option>
+                                        <!-- More classes dynamically -->
+                                    </select>
+                                    <input type="text" id="student-search" placeholder="Search students..." class="ml-4 px-2 py-1 border rounded">
+                                </div>
+                                <div id="student-list" class="max-h-48 overflow-y-auto grid grid-cols-2 gap-2"></div>
+                                <div class="mt-2 text-sm text-gray-600">
+                                    <span id="selected-student-count">0</span> students selected
+                                </div>
+                                <div id="selected-student-preview" class="mt-2 text-xs text-blue-600"></div>
+                            </div>
+                        </div>
+                        <div class="mt-6 flex justify-end">
+                            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded font-bold">Create Assignment</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-    </div>
-    
-    <script>
+
+        <!-- Assignment Management Dashboard -->
+        <div class="mb-12">
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="font-bold text-xl mb-4" data-i18n="assignment.teacher.myAssignments">My Assignments</h2>
+                <div id="assignment-dashboard" class="grid md:grid-cols-2 gap-4"></div>
+            </div>
+        </div>
+
+        <!-- Real-time Status Indicators -->
+        <div class="mb-12">
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="font-bold text-xl mb-4">Assignment Delivery Status</h2>
+                <div id="assignment-status-indicators" class="grid md:grid-cols-2 gap-4"></div>
+            </div>
+        </div>
+
+        <script src="/learning/gamified6-12/js/assignment-manager.js"></script>
+        <script src="/learning/gamified6-12/js/assignment-sync.js"></script>
+        <script>
         feather.replace();
         i18n.init();
         // Analytics dashboard JS init
         document.addEventListener('DOMContentLoaded', async function() {
             await TeacherAnalytics.init();
-            // Example: render dummy charts (replace with real data wiring)
-            const ctx1 = document.getElementById('performance-trend-chart').getContext('2d');
-            new Chart(ctx1, { type: 'line', data: { labels: ['Week 1','Week 2','Week 3','Week 4'], datasets: [{ label: 'Avg Score', data: [65, 72, 78, 85], borderColor: '#10b981', fill: false }] }, options: { responsive: true } });
-            const ctx2 = document.getElementById('subject-comparison-chart').getContext('2d');
-            new Chart(ctx2, { type: 'bar', data: { labels: ['Math','Science','Physics','Chemistry','Tech'], datasets: [{ label: 'Avg', data: [82, 79, 75, 80, 70], backgroundColor: ['#10b981','#3b82f6','#f59e42','#a78bfa','#f43f5e'] }] }, options: { indexAxis: 'y', responsive: true } });
-            const ctx3 = document.getElementById('engagement-heatmap').getContext('2d');
-            new Chart(ctx3, { type: 'bar', data: { labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets: [{ label: 'Active Students', data: [38, 40, 35, 42, 39, 37, 36], backgroundColor: '#059669' }] }, options: { responsive: true } });
-            const ctx4 = document.getElementById('difficulty-progression-chart').getContext('2d');
-            new Chart(ctx4, { type: 'line', data: { labels: ['Week 1','Week 2','Week 3','Week 4'], datasets: [{ label: 'Difficulty', data: [2, 2.5, 3, 3.5], borderColor: '#f59e42', fill: false }] }, options: { responsive: true } });
-            // TODO: Wire up TeacherAnalytics, CSVExporter, AdaptiveDifficultyTracker, and fill all widgets/tables
+            // Chart.js chart instances
+            let perfChart, subjChart, engagementChart, diffChart;
+            let selectedClass = 'all';
+            const classFilter = document.getElementById('class-filter');
+            if (classFilter) {
+                classFilter.addEventListener('change', async (e) => {
+                    selectedClass = e.target.value;
+                    await renderCharts();
+                });
+            }
+            async function renderCharts() {
+                // 1. Performance Trend Chart
+                const perfTrend = await TeacherAnalytics.generatePerformanceTrendChart(selectedClass);
+                const ctx1 = document.getElementById('performance-trend-chart').getContext('2d');
+                if (perfChart) perfChart.destroy();
+                perfChart = new Chart(ctx1, {
+                    type: 'line',
+                    data: {
+                        labels: perfTrend.map((_, i) => `Week ${i+1}`),
+                        datasets: [{ label: 'Avg Score', data: perfTrend, borderColor: '#10b981', fill: false }]
+                    },
+                    options: { responsive: true }
+                });
+                // 2. Subject Comparison Chart (Activity Frequency)
+                const subjFreq = await TeacherAnalytics.getSubjectActivityFrequency(selectedClass);
+                const ctx2 = document.getElementById('subject-comparison-chart').getContext('2d');
+                if (subjChart) subjChart.destroy();
+                subjChart = new Chart(ctx2, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(subjFreq),
+                        datasets: [{ label: 'Activity Frequency', data: Object.values(subjFreq), backgroundColor: ['#10b981','#3b82f6','#f59e42','#a78bfa','#f43f5e'] }]
+                    },
+                    options: { indexAxis: 'y', responsive: true }
+                });
+                // 3. Engagement Heatmap
+                const engagement = await TeacherAnalytics.generateEngagementChart(selectedClass);
+                const ctx3 = document.getElementById('engagement-heatmap').getContext('2d');
+                if (engagementChart) engagementChart.destroy();
+                engagementChart = new Chart(ctx3, {
+                    type: 'bar',
+                    data: {
+                        labels: engagement.map((_, i) => `Student ${i+1}`),
+                        datasets: [{ label: 'Engagement', data: engagement, backgroundColor: '#059669' }]
+                    },
+                    options: { responsive: true }
+                });
+                // 4. Difficulty Progression
+                const diffProg = await TeacherAnalytics.generateDifficultyProgressionChart(selectedClass);
+                const ctx4 = document.getElementById('difficulty-progression-chart').getContext('2d');
+                if (diffChart) diffChart.destroy();
+                diffChart = new Chart(ctx4, {
+                    type: 'line',
+                    data: {
+                        labels: diffProg.map((_, i) => `Session ${i+1}`),
+                        datasets: [{ label: 'Difficulty', data: diffProg.map(d => d.difficulty || 0), borderColor: '#f59e42', fill: false }]
+                    },
+                    options: { responsive: true }
+                });
+            }
+            // Initial chart render
+            await renderCharts();
+            // Refresh charts on sv-activity event
+            TeacherAnalytics.subscribeToActivityEvents(async (activity) => {
+                if (activity === 'refresh') await renderCharts();
+            });
+            // --- Fill Weak Topics List ---
+            async function renderWeakTopics() {
+                const weakTopics = await TeacherAnalytics.getWeakTopics();
+                const weakList = document.getElementById('weak-topics-list');
+                weakList.innerHTML = weakTopics.length ? '<ul>' + weakTopics.map(t => `<li class="mb-2"><span class="font-bold">${t.topic}</span>: <span class="text-red-600">${Math.round(t.avgScore)}%</span></li>`).join('') + '</ul>' : '<span>No weak topics detected.</span>';
+            }
+            await renderWeakTopics();
+            TeacherAnalytics.subscribeToActivityEvents(async (activity) => {
+                if (activity === 'refresh') await renderWeakTopics();
+            });
+            // --- CSV Export Buttons ---
+            document.getElementById('export-csv-btn').onclick = () => {
+                // Export recent activity as CSV
+                TeacherAnalytics.getRecentActivity(100).then(activity => {
+                    const csv = [
+                        'Student ID,Student Name,Type,Subject,Score,Time Spent,Difficulty,Class ID,Timestamp',
+                        ...activity.map(ev => [ev.studentId, ev.studentName, ev.type, ev.subject, ev.score, ev.timeSpent, ev.difficulty, ev.classId, ev.timestamp].join(','))
+                    ].join('\n');
+                    CSVExporter.downloadCSV('activity_events.csv', csv);
+                });
+            };
+            document.getElementById('custom-export-btn').onclick = () => {
+                // Export weak topics as CSV
+                TeacherAnalytics.getWeakTopics().then(topics => {
+                    const csv = [
+                        'Topic,Average Score,Count,Fail Rate',
+                        ...topics.map(t => [t.topic, Math.round(t.avgScore), t.count, t.failRate].join(','))
+                    ].join('\n');
+                    CSVExporter.downloadCSV('weak_topics.csv', csv);
+                });
+            };
         });
-    </script>
+        </script>
 </body>
 </html>

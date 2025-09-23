@@ -10,11 +10,12 @@
     <script src="https://unpkg.com/feather-icons"></script>
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/learning/gamified6-12/css/accessibility.css">
+    <script src="/learning/gamified6-12/js/i18n.js"></script>
 </head>
 <body class="bg-gray-100">
     <!-- Accessibility & Inclusivity Header -->
     <header class="flex justify-between items-center px-4 py-2 bg-green-50">
-        <div id="lang-toggle"></div>
+    <div id="lang-toggle" class="mr-4 flex items-center"></div>
         <div class="flex gap-2">
             <button id="voice-nav-btn" class="voice-nav-btn" title="Start Voice Navigation" data-i18n="voice.start"><i data-feather="mic"></i></button>
             <button id="voice-help-btn" class="voice-nav-btn" title="Voice Help" data-i18n="voice.help"><i data-feather="help-circle"></i></button>
@@ -87,8 +88,8 @@
                             <span class="ml-3">Settings</span>
                         </a>
                         <a href="/logout.html" class="flex items-center px-4 py-3 text-blue-200 hover:text-white hover:bg-blue-800 rounded-lg transition duration-300">
-                            <i data-feather="log-out" class="w-5 h-5"></i>
-                            <span class="ml-3">Logout</span>
+                            <i data-feather="log-out" class="w-5 h-5" aria-hidden="true"></i>
+                            <span class="ml-3" data-i18n="sidebar_logout" aria-label="Logout">Logout</span>
                         </a>
                     </div>
                 </div>
@@ -111,8 +112,98 @@
                 <div class="max-w-7xl mx-auto">
                     <!-- Avatar Creator -->
                     <section id="avatar-section" class="avatar-section mb-6">
-                        <h2 data-i18n="avatar.title">Create Your Avatar</h2>
-                        <div id="avatar-creator"></div>
+                    <!-- Daily Challenges Quiz Section -->
+                    <section id="daily-challenges-section" class="mb-6">
+                        <h2 class="text-xl font-bold">Daily Challenges</h2>
+                        <div class="bg-yellow-50 rounded-xl p-4 flex flex-col md:flex-row gap-4 items-center">
+                            <div class="flex-1">
+                                <div id="current-daily-quiz" class="mb-2">
+                                    <span class="font-semibold">Today's Quiz:</span>
+                                    <span id="daily-quiz-subject">Mixed STEM</span>
+                                    <span id="daily-quiz-difficulty" class="ml-2 text-sm text-gray-600">Intermediate</span>
+                                </div>
+                                <div id="daily-quiz-progress" class="mb-2 text-sm">Progress: <span id="daily-quiz-progress-count">0/15</span></div>
+                                <button id="start-daily-quiz" class="px-4 py-2 bg-yellow-400 text-black rounded font-bold">Start Quiz</button>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div id="quiz-streak" class="text-lg font-bold">Streak: <span id="quiz-streak-count">0</span></div>
+                                <div id="quiz-milestone" class="text-sm text-gray-600">Next Reward: <span id="quiz-next-reward">50 Coins</span></div>
+                            </div>
+                        </div>
+                        <div id="completed-daily-challenges" class="mt-4">
+                            <h3 class="font-semibold mb-2">Completed Challenges</h3>
+                            <ul id="completed-challenge-list" class="list-disc pl-5"></ul>
+                        </div>
+                    </section>
+                    <!-- Assigned Activities Section -->
+
+                    <section id="assigned-activities-section" class="mb-6">
+                        <h2 class="text-xl font-bold" data-i18n="assignment.student.assigned">Assigned Activities</h2>
+                        <div class="bg-blue-50 rounded-xl p-4">
+                            <div class="flex items-center mb-2">
+                                <span class="text-sm text-gray-600">Sync Status:</span>
+                                <span id="offline-status" class="ml-2 text-green-600">Online</span>
+                                <span id="sync-refresh" class="ml-4 text-xs text-blue-600 cursor-pointer">Refresh</span>
+                            </div>
+                            <div class="flex gap-2 mb-2">
+                                <select id="assignment-filter" class="px-2 py-1 border rounded">
+                                    <option value="all" data-i18n="assignment.student.assigned">All</option>
+                                    <option value="pending" data-i18n="assignment.student.pending">Pending</option>
+                                    <option value="submitted" data-i18n="assignment.student.completed">Submitted</option>
+                                    <option value="graded" data-i18n="assignment.status.graded">Graded</option>
+                                    <option value="overdue" data-i18n="assignment.student.overdue">Overdue</option>
+                                </select>
+                                <input type="text" id="assignment-search" placeholder="Search assignments..." class="px-2 py-1 border rounded">
+                                <select id="assignment-sort" class="px-2 py-1 border rounded">
+                                    <option value="dueDate">Due Date</option>
+                                    <option value="subject">Subject</option>
+                                    <option value="status">Status</option>
+                                </select>
+                            </div>
+                            <div id="assigned-activities-list">
+                                <!-- Assignment cards dynamically loaded -->
+                            </div>
+                            <div id="assignment-history" class="mt-4 hidden">
+                                <h3 class="font-semibold mb-2" data-i18n="assignment.student.completed">Completed Assignments</h3>
+                                <ul id="completed-assignment-list" class="list-disc pl-5"></ul>
+                            </div>
+                        </div>
+                        <!-- Assignment Submission Modal -->
+                        <div id="assignment-submission-modal" class="fixed inset-0 bg-black bg-opacity-40 items-center justify-center hidden z-50">
+                            <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg">
+                                <h3 class="font-bold text-lg mb-2" data-i18n="assignment.submission.submit">Submit Assignment</h3>
+                                <div id="submission-modal-content"></div>
+                                <div class="mt-4 flex justify-end gap-2">
+                                    <button id="close-submission-modal" class="px-3 py-1 bg-gray-300 rounded">Cancel</button>
+                                    <button id="submit-assignment-btn" class="px-4 py-2 bg-blue-600 text-white rounded font-bold">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                                                <h2 data-i18n="avatar.title">Create Your Avatar</h2>
+                                                <div id="avatar-customization" class="bg-white rounded-xl shadow p-6 flex flex-col md:flex-row gap-6">
+                                                    <div class="avatar-preview flex flex-col items-center justify-center">
+                                                        <canvas id="avatar-canvas" width="220" height="320" class="rounded-lg border mb-2" aria-label="Avatar Preview"></canvas>
+                                                        <div class="avatar-actions flex gap-2 mt-2">
+                                                            <button id="avatar-save" class="px-3 py-1 bg-blue-600 text-white rounded" data-i18n="avatar.actions.save">Save</button>
+                                                            <button id="avatar-export" class="px-3 py-1 bg-green-600 text-white rounded" data-i18n="avatar.actions.export">Export</button>
+                                                            <button id="avatar-reset" class="px-3 py-1 bg-gray-300 text-gray-800 rounded" data-i18n="avatar.actions.reset">Reset</button>
+                                                            <button id="avatar-randomize" class="px-3 py-1 bg-purple-600 text-white rounded" data-i18n="avatar.actions.randomize">Randomize</button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="avatar-customization flex-1">
+                                                        <div class="avatar-tabs flex gap-2 mb-4">
+                                                            <button class="avatar-tab px-3 py-1 rounded bg-gray-200" data-tab="appearance" data-i18n="avatar.tab.appearance">Appearance</button>
+                                                            <button class="avatar-tab px-3 py-1 rounded bg-gray-200" data-tab="cultural" data-i18n="avatar.tab.cultural">Cultural</button>
+                                                            <button class="avatar-tab px-3 py-1 rounded bg-gray-200" data-tab="stem" data-i18n="avatar.tab.stem">STEM</button>
+                                                            <button class="avatar-tab px-3 py-1 rounded bg-gray-200" data-tab="accessories" data-i18n="avatar.tab.accessories">Accessories</button>
+                                                            <button class="avatar-tab px-3 py-1 rounded bg-gray-200" data-tab="achievements" data-i18n="avatar.tab.achievements">Achievements</button>
+                                                            <button class="avatar-tab px-3 py-1 rounded bg-gray-200" data-tab="unlocks" data-i18n="avatar.tab.unlocks">Unlocks</button>
+                                                        </div>
+                                                        <div id="avatar-options-panel" class="avatar-options-panel grid grid-cols-2 md:grid-cols-3 gap-3"></div>
+                                                        <div id="avatar-achievement-panel" class="avatar-achievement-panel mt-4"></div>
+                                                    </div>
+                                                </div>
                     </section>
                     <!-- Audio Guidance -->
                     <section id="audio-guidance-section" class="audio-guidance-section mb-6">
@@ -231,6 +322,49 @@
                     
                     <!-- Today's Activities -->
                     <div class="grid md:grid-cols-2 gap-6">
+                        <!-- Quiz Integration in Today's Activities -->
+                        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h2 class="text-xl font-bold">Today's Quiz Challenge</h2>
+                                <button id="quick-start-quiz" class="px-3 py-1 bg-yellow-400 text-black rounded font-bold">Quick Start</button>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="flex items-start p-3 border border-yellow-200 rounded-lg hover:bg-yellow-50 transition duration-300">
+                                    <div class="bg-yellow-100 p-2 rounded-lg mr-4">
+                                        <i data-feather="help-circle" class="w-5 h-5 text-yellow-600"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="font-medium mb-1">Mixed STEM Quiz</h3>
+                                        <p class="text-sm text-gray-600 mb-2">Complete today's quiz challenge for bonus rewards.</p>
+                                        <div class="flex items-center text-xs text-gray-500">
+                                            <i data-feather="clock" class="w-3 h-3 mr-1"></i>
+                                            <span>20 min activity</span>
+                                            <span class="ml-2">Difficulty: Intermediate</span>
+                                            <span class="ml-2">Reward: 50 Coins</span>
+                                        </div>
+                                    </div>
+                                    <button class="text-yellow-600 hover:text-yellow-800 font-bold">Start</button>
+                                </div>
+                            </div>
+                        </div>
+    <script>
+    // Daily Quiz Section Logic
+    document.addEventListener('DOMContentLoaded', function() {
+        // Update streak and milestone
+        if (window.GamificationManager) {
+            document.getElementById('quiz-streak-count').textContent = GamificationManager.getQuizStreak(['math','physics','chemistry','biology','technology']);
+        }
+        // Start quiz button
+        document.getElementById('start-daily-quiz').onclick = function() {
+            window.location.href = '/games.html?quiz=dailyQuiz';
+        };
+        document.getElementById('quick-start-quiz').onclick = function() {
+            window.location.href = '/games.html?quiz=dailyQuiz';
+        };
+        // Completed challenges stub
+        // ...existing code for loading completed challenges...
+    });
+    </script>
                         <div class="bg-white rounded-xl shadow-sm p-6">
                             <div class="flex items-center justify-between mb-4">
                                 <h2 class="text-xl font-bold">Today's Activities</h2>
@@ -353,7 +487,7 @@
             Offline.init();
             VoiceNavigationSystem.init();
             AudioGuidedLearning.init();
-            StemAvatarCreator.init();
+            try { STEMAvatarCreator.init?.(); } catch(e) { console.error('Avatar init failed', e); }
             // Guest mode indicator
             if (Offline.isGuestSession()) {
                 document.getElementById('guest-mode-indicator').style.display = 'block';
